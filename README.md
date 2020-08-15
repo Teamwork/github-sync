@@ -52,6 +52,10 @@ jobs:
 ## Usage
 When creating a new PR, write in the description of the PR the URL of the task. The action will automatically add a comment in the task.
 
+![github pr comment](./.github/assets/github_pr_comment.png)
+
+![teamwork pr comment](./.github/assets/teamwork_pr_comment.png)
+
 ## Contributing
 * Open a PR: https://github.com/miguelbemartin/teamwork-github/pulls
 * Open an issue: https://github.com/miguelbemartin/teamwork-github/issues
