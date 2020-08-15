@@ -25,7 +25,15 @@ Create a new file `/.github/workflows/teamwork.yml`
 ```yaml
 name: teamwork
 
-on: [pull_request]
+on:
+  pull_request:
+    types: [opened, synchronize, closed]
+  pull_request_review:
+    types: [submitted, edited, dismissed]
+  pull_request_review_comment:
+    types: [created, deleted]
+  issue_comment:
+    types: [created]
 
 jobs:
   teamwork-sync:
