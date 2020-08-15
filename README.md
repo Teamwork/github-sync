@@ -9,7 +9,7 @@
 </h1>
 
 <p align="center">
-    This action helps you to keep in sync your PRs and your Teamwork tasks
+    This action helps you to keep in sync your PRs with your Teamwork tasks.
 </p>
 
 ## Getting Started
