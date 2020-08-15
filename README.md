@@ -19,8 +19,10 @@ Create the next environment vars in your repository:
 * `TEAMWORK_URI`: The URL of your installation (e.g.: https://yourcompany.teamwork.com)
 * `TEAMWORK_API_TOKEN`: The API token to authenticate the workflow
 
+`GITHUB_TOKEN` doesn't need to be setup in the repository, this var is always available during the workflows execution.
+
 ### Installation
-Create a new file `/.github/workflows/teamwork.yml`
+Create a new file `/.github/workflows/teamwork.yml` with the following:
 
 ```yaml
 name: teamwork
@@ -48,7 +50,7 @@ jobs:
 ```
 
 ## Usage
-When creating a new PR, write in the description of the PR the URL of the task and the action will automatically add a comment directly in the task.
+When creating a new PR, write in the description of the PR the URL of the task. The action will automatically add a comment in the task.
 
 ## Contributing
 * Open a PR: https://github.com/miguelbemartin/teamwork-github/pulls
