@@ -1,0 +1,22 @@
+name: 'Teamwork Github'
+description: 'This action helps you to keep in sync your PRs and your Teamwork tasks.'
+branding:
+  icon: 'alert-circle'
+  color: 'gray-dark'
+inputs:
+  GITHUB_TOKEN:
+    description: 'GitHub token'
+    required: true
+  TEAMWORK_URI:
+    description: 'Teamwork URI'
+    required: true
+  TEAMWORK_API_TOKEN:
+    description: 'Teamwork API token'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.GITHUB_TOKEN }}
+    - ${{ inputs.TEAMWORK_URI }}
+    - ${{ inputs.TEAMWORK_API_TOKEN }}
