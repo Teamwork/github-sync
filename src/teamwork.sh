@@ -45,6 +45,9 @@ teamwork::pull_request_synchronize() {
 
 teamwork::pull_request_closed() {
   local -r user=$(github::get_sender_user)
+  local -r pr_url=$(github::get_pr_url)
+  local -r pr_title=$(github::get_pr_title)
+
   teamwork::add_comment "
   **$user** closed a PR: **$pr_title**
   [$pr_url]($pr_url)
@@ -53,6 +56,9 @@ teamwork::pull_request_closed() {
 
 teamwork::pull_request_review_submitted() {
   local -r user=$(github::get_sender_user)
+  local -r pr_url=$(github::get_pr_url)
+  local -r pr_title=$(github::get_pr_title)
+
   teamwork::add_comment "
   **$user** submited a review to the PR: **$pr_title**
   [$pr_url]($pr_url)
