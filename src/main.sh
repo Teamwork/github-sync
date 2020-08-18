@@ -47,8 +47,6 @@ main() {
     teamwork::pull_request_review_edited
   elif [ "$event" == "pull_request_review" ] && [ "$action" == "dismissed" ]; then
     teamwork::pull_request_review_dismissed
-  elif [ "$event" == "pull_request_review_comment" ] && [ "$action" == "created" ]; then
-    teamwork::pull_request_review_comment_created
   elif [ "$event" == "pull_request_review_comment" ] && [ "$action" == "deleted" ]; then
     teamwork::pull_request_review_comment_deleted
   elif [ "$event" == "issue_comment" ] && [ "$action" == "created" ]; then
