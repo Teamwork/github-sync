@@ -73,10 +73,6 @@ teamwork::pull_request_review_dismissed() {
   teamwork::add_comment "Review dismissed"
 }
 
-teamwork::pull_request_review_comment_created() {
-  teamwork::add_comment "Added a new comment to the review"
-}
-
 teamwork::pull_request_review_comment_deleted() {
   teamwork::add_comment "Review deleted"
 }
