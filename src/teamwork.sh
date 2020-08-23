@@ -58,10 +58,15 @@ teamwork::pull_request_review_submitted() {
   local -r user=$(github::get_sender_user)
   local -r pr_url=$(github::get_pr_url)
   local -r pr_title=$(github::get_pr_title)
+  local -r review_state=$(github::get_review_state)
+  local -r comment=$(github::get_review_comment)
 
   teamwork::add_comment "
   **$user** submited a review to the PR: **$pr_title**
   [$pr_url]($pr_url)
+  ---
+  Review: **$review_state**
+  Comment: **$comment**
   "
 }
 

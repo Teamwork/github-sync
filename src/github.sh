@@ -32,6 +32,14 @@ github::get_sender_user() {
   jq --raw-output .sender.login "$GITHUB_EVENT_PATH"
 }
 
+github::get_review_state() {
+  jq --raw-output .review.state "$GITHUB_EVENT_PATH"
+}
+
+github::get_review_comment() {
+  jq --raw-output .review.body "$GITHUB_EVENT_PATH"
+}
+
 github::print_all_data() {
   cat "$GITHUB_EVENT_PATH"
 }
