@@ -60,8 +60,5 @@ When creating a new PR, write in the description of the PR the URL of the task. 
 * Open a PR: https://github.com/miguelbemartin/teamwork-github/pulls
 * Open an issue: https://github.com/miguelbemartin/teamwork-github/issues
 
-## Authors
-* **Miguel Ángel Martín** - [@miguelbemartin](https://twitter.com/miguelbemartin)
-
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
