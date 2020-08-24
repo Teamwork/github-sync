@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Teamwork Sync
     steps:
-      - uses: miguelbemartin/teamwork-github@master
+      - uses: teamwork/github-sync@master
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TEAMWORK_URI: ${{ secrets.TEAMWORK_URI }}
