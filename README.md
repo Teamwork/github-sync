@@ -18,7 +18,8 @@
 Create the next environment vars in your repository:
 * `TEAMWORK_URI`: The URL of your installation (e.g.: https://yourcompany.teamwork.com)
 * `TEAMWORK_API_TOKEN`: The API token to authenticate the workflow. Follow [this guide](https://developer.teamwork.com/guides/api-key-url/) to find your URL and API key.
-* **Please Note:** The Teamwork account associated with this API key is the account which these comments will be created under. If this user does not have permission to access the project, this action will be ignored. 
+
+**Please Note:** The Teamwork account associated with this API key is the account which these comments will be created under. If this user does not have permission to access the project, this action will be ignored. 
 
 `GITHUB_TOKEN` doesn't need to be setup in the repository, this var is always available during the workflows execution.
 
