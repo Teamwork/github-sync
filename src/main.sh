@@ -37,20 +37,14 @@ main() {
 
   if [ "$event" == "pull_request" ] && [ "$action" == "opened" ]; then
     teamwork::pull_request_opened
-  elif [ "$event" == "pull_request" ] && [ "$action" == "synchronize" ]; then
-    teamwork::pull_request_synchronize
   elif [ "$event" == "pull_request" ] && [ "$action" == "closed" ]; then
     teamwork::pull_request_closed
   elif [ "$event" == "pull_request_review" ] && [ "$action" == "submitted" ]; then
     teamwork::pull_request_review_submitted
-  elif [ "$event" == "pull_request_review" ] && [ "$action" == "edited" ]; then
-    teamwork::pull_request_review_edited
   elif [ "$event" == "pull_request_review" ] && [ "$action" == "dismissed" ]; then
     teamwork::pull_request_review_dismissed
   elif [ "$event" == "pull_request_review_comment" ] && [ "$action" == "deleted" ]; then
     teamwork::pull_request_review_comment_deleted
-  elif [ "$event" == "issue_comment" ] && [ "$action" == "created" ]; then
-    teamwork::issue_comment_created
   else
     log::message "Operation not allowed"
     exit 0

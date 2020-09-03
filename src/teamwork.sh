@@ -70,10 +70,6 @@ teamwork::pull_request_review_submitted() {
   "
 }
 
-teamwork::pull_request_review_edited() {
-  teamwork::add_comment "Review edited"
-}
-
 teamwork::pull_request_review_dismissed() {
   teamwork::add_comment "Review dismissed"
 }

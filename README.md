@@ -31,13 +31,11 @@ name: teamwork
 
 on:
   pull_request:
-    types: [opened, synchronize, closed]
+    types: [opened, closed]
   pull_request_review:
-    types: [submitted, edited, dismissed]
+    types: [submitted, dismissed]
   pull_request_review_comment:
     types: [created, deleted]
-  issue_comment:
-    types: [created]
 
 jobs:
   teamwork-sync:
