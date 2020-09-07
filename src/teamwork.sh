@@ -62,7 +62,7 @@ teamwork::pull_request_review_submitted() {
   local -r comment=$(github::get_review_comment)
 
   # Only add a message if the PR has been approved
-  if [ "$review_state" == "approved" ]; then
+  if [ "$review_state" == "approved" || "$review_state" == "rejected" ]; then
     teamwork::add_comment "
 **$user** submitted a review to the PR: **$pr_title**
 [$pr_url]($pr_url)
