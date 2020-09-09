@@ -49,7 +49,7 @@ teamwork::pull_request_closed() {
   local -r pr_title=$(github::get_pr_title)
 
   teamwork::add_comment "
-  **$user** closed a PR: **$pr_title**
+  **$user** merged a PR: **$pr_title**
   [$pr_url]($pr_url)
   "
 }
