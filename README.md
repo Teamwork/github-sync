@@ -59,8 +59,8 @@ Please note, the comment will be created in Teamwork under the account you have 
 ![teamwork pr comment](./.github/assets/teamwork_pr_comment.png)
 
 ## Contributing
-* Open a PR: https://github.com/miguelbemartin/teamwork-github/pulls
-* Open an issue: https://github.com/miguelbemartin/teamwork-github/issues
+* Open a PR: https://github.com/Teamwork/github-sync/pulls
+* Open an issue: https://github.com/Teamwork/github-sync/issues
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
