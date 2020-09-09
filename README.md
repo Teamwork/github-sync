@@ -47,6 +47,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TEAMWORK_URI: ${{ secrets.TEAMWORK_URI }}
           TEAMWORK_API_TOKEN: ${{ secrets.TEAMWORK_API_TOKEN }}
+
 ```
 
 ## Usage
