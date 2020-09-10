@@ -5,7 +5,7 @@ teamwork::get_task_id_from_body() {
 
   pat='tasks\/[0-9]{1,}'
   task=$(echo "$body" | grep -Eo "$pat")
-  task_id=$(echo $task | tr -cd  '[:digit:]')
+  task_id=$(echo "$task" | tr -cd  '[:digit:]')
 
   echo "$task_id"
 }
