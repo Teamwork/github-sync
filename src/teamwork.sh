@@ -4,21 +4,21 @@ teamwork::get_task_id_from_body() {
   local -r body=$1
 
   pat='tasks\/[0-9]{1,}'
-  task=$(echo $body | grep -Eo $pat)
-  task_id=$(echo $task | tr -cd  '[[:digit:]]')
+  task=$(echo "$body" | grep -Eo "$pat")
+  task_id=$(echo "$task" | tr -cd  '[:digit:]')
 
-  echo $task_id
+  echo "$task_id"
 }
 
 teamwork::add_comment() {
   local -r body=$1
 
   response=$(curl -X "POST" "$TEAMWORK_URI/projects/api/v1/tasks/$TEAMWORK_TASK_ID/comments.json" \
-       -H 'Authorization: Bearer '$TEAMWORK_API_TOKEN \
+       -u "$TEAMWORK_API_TOKEN"':' \
        -H 'Content-Type: application/json; charset=utf-8' \
        -d "{ \"comment\": { \"body\": \"$body\", \"notify\": \"\", \"content-type\": \"text\", \"isprivate\": false } }" )
 
-  echo $response
+  echo "$response"
 }
 
 teamwork::pull_request_opened() {
@@ -49,7 +49,7 @@ teamwork::pull_request_closed() {
   local -r pr_title=$(github::get_pr_title)
 
   teamwork::add_comment "
-  **$user** closed a PR: **$pr_title**
+  **$user** merged a PR: **$pr_title**
   [$pr_url]($pr_url)
   "
 }

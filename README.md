@@ -12,6 +12,8 @@
     This action helps you to sync your PRs with tasks in Teamwork to streamline team collaboration and your development workflows. 
 </p>
 
+![Linter](https://github.com/Teamwork/github-sync/workflows/Linter/badge.svg)
+
 ## Getting Started
 
 ### Prerequisites
@@ -47,6 +49,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TEAMWORK_URI: ${{ secrets.TEAMWORK_URI }}
           TEAMWORK_API_TOKEN: ${{ secrets.TEAMWORK_API_TOKEN }}
+
 ```
 
 ## Usage
@@ -59,8 +62,8 @@ Please note, the comment will be created in Teamwork under the account you have 
 ![teamwork pr comment](./.github/assets/teamwork_pr_comment.png)
 
 ## Contributing
-* Open a PR: https://github.com/miguelbemartin/teamwork-github/pulls
-* Open an issue: https://github.com/miguelbemartin/teamwork-github/issues
+* Open a PR: https://github.com/Teamwork/github-sync/pulls
+* Open an issue: https://github.com/Teamwork/github-sync/issues
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details

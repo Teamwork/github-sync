@@ -9,6 +9,7 @@ fi
 
 export PROJECT_HOME
 
+# shellcheck disable=SC1090
 source "$PROJECT_HOME/src/main.sh"
 
 main "$@"
