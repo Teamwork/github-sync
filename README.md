@@ -12,6 +12,8 @@
     This action helps you to sync your PRs with tasks in Teamwork to streamline team collaboration and your development workflows. 
 </p>
 
+![Linter](https://github.com/Teamwork/github-sync/workflows/Linter/badge.svg)
+
 ## Getting Started
 
 ### Prerequisites

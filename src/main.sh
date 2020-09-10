@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# shellcheck disable=SC1090
 source "$PROJECT_HOME/src/ensure.sh"
 source "$PROJECT_HOME/src/github.sh"
 source "$PROJECT_HOME/src/misc.sh"
@@ -26,14 +27,14 @@ main() {
     exit 0
   fi
 
-  log::message "Task found with the id: "$task_id
+  log::message "Task found with the id: $task_id"
 
   export TEAMWORK_TASK_ID=$task_id
 
   local -r event=$(github::get_event_name)
   local -r action=$(github::get_action)
 
-  log::message "Event: " $event " - Action: " $action
+  log::message "Event: $event - Action: $action"
 
   if [ "$event" == "pull_request" ] && [ "$action" == "opened" ]; then
     teamwork::pull_request_opened
