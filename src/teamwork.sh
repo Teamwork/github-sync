@@ -74,11 +74,13 @@ $comment
 }
 
 teamwork::pull_request_review_dismissed() {
-  teamwork::add_comment "Review dismissed"
+  local -r user=$(github::get_sender_user)
+  teamwork::add_comment "Review dismissed by $user"
 }
 
 teamwork::pull_request_review_comment_deleted() {
-  teamwork::add_comment "Review deleted"
+  local -r user=$(github::get_sender_user)
+  teamwork::add_comment "Review deleted by $user"
 }
 
 teamwork::issue_comment_created() {
