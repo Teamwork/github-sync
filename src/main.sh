@@ -44,8 +44,6 @@ main() {
     teamwork::pull_request_review_submitted
   elif [ "$event" == "pull_request_review" ] && [ "$action" == "dismissed" ]; then
     teamwork::pull_request_review_dismissed
-  elif [ "$event" == "pull_request_review_comment" ] && [ "$action" == "deleted" ]; then
-    teamwork::pull_request_review_comment_deleted
   else
     log::message "Operation not allowed"
     exit 0

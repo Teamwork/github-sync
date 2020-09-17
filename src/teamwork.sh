@@ -32,17 +32,6 @@ teamwork::pull_request_opened() {
   "
 }
 
-teamwork::pull_request_synchronize() {
-  local -r pr_url=$(github::get_pr_url)
-  local -r pr_title=$(github::get_pr_title)
-  local -r user=$(github::get_sender_user)
-
-  teamwork::add_comment "
-  **$user** updated a PR: **$pr_title**
-  [$pr_url]($pr_url)
-  "
-}
-
 teamwork::pull_request_closed() {
   local -r user=$(github::get_sender_user)
   local -r pr_url=$(github::get_pr_url)
@@ -76,14 +65,4 @@ $comment
 teamwork::pull_request_review_dismissed() {
   local -r user=$(github::get_sender_user)
   teamwork::add_comment "Review dismissed by $user"
-}
-
-teamwork::pull_request_review_comment_deleted() {
-  local -r user=$(github::get_sender_user)
-  teamwork::add_comment "Review deleted by $user"
-}
-
-teamwork::issue_comment_created() {
-  local -r user=$(github::get_sender_user)
-  teamwork::add_comment "Comment added by $user"
 }
