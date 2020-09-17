@@ -2,12 +2,17 @@
 
 teamwork::get_task_id_from_body() {
   local -r body=$1
+  local task_ids=()
 
-  pat='tasks\/[0-9]{1,}'
-  task=$(echo "$body" | grep -Eo "$pat")
-  task_id=$(echo "$task" | tr -cd  '[:digit:]')
+  pat='tasks\/([0-9]{1,})'
+  while [[ $body =~ $regex ]]; do
+    task_ids+=( ${BASH_REMATCH[1]} )
+    body=${body#*"${BASH_REMATCH[1]}"}
+  done
 
-  echo "$task_id"
+  local task_ids_str=$(printf ",%s" "${task_ids[@]}")
+  task_ids_str=${task_ids_str:1} # remove initial comma
+  echo "$task_ids_str"
 }
 
 teamwork::add_comment() {
