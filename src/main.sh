@@ -27,16 +27,16 @@ main() {
     exit 0
   fi
 
+  local -r event=$(github::get_event_name)
+  local -r action=$(github::get_action)
+
+  log::message "Event: $event - Action: $action"
+
   IFS=',' read -r -a task_ids <<< "$task_ids_str"
   for task_id in "${task_ids[@]}"; do
     log::message "Task found with the id: $task_id"
 
     export TEAMWORK_TASK_ID=$task_id
-
-    local -r event=$(github::get_event_name)
-    local -r action=$(github::get_action)
-
-    log::message "Event: $event - Action: $action"
 
     if [ "$event" == "pull_request" ] && [ "$action" == "opened" ]; then
       teamwork::pull_request_opened
