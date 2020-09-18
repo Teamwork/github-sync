@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 teamwork::get_task_id_from_body() {
-  local -r body=$1
+  local body=$1
   local task_ids=()
 
   pat='tasks\/([0-9]{1,})'
