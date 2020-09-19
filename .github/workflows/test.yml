@@ -1,0 +1,19 @@
+name: teamwork
+
+on:
+  pull_request:
+    types: [opened, closed]
+  pull_request_review:
+    types: [submitted, dismissed]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Ensure this project runs
+    steps:
+      - uses: actions/checkout@v1
+      - uses: ./
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TEAMWORK_URI: "localhost"
+          TEAMWORK_API_TOKEN: "test_api_token"
