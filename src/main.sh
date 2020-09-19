@@ -18,6 +18,8 @@ main() {
   export TEAMWORK_URI="$2"
   export TEAMWORK_API_TOKEN="$3"
 
+  env::set_environment
+
   # Check if there is a task link in the PR
   local -r pr_body=$(github::get_pr_body)
   local -r task_id=$(teamwork::get_task_id_from_body "$pr_body" )
