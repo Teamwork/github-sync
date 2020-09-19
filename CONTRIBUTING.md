@@ -12,17 +12,17 @@
 Simulate a new pull request
 
 ```
-act pull_request -e events/pull_request_opened.json
+act pull_request -e tests/events/pull_request_opened.json
 ```
 
 Simulate a pull request has been approved
 
 ```
-act pull_request -e events/pull_request_approved.json
+act pull_request_review -e tests/events/pull_request_approved.json
 ```
 
 Simulate a pull request has been merged
 
 ```
-act pull_request -e events/pull_request_merged.json
+act pull_request -e tests/events/pull_request_merged.json
 ```

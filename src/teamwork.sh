@@ -13,12 +13,17 @@ teamwork::get_task_id_from_body() {
 teamwork::add_comment() {
   local -r body=$1
 
+  if [ "$ENV" == "test" ]; then
+    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Comment: ${body//\"/}"
+    return
+  fi
+
   response=$(curl -X "POST" "$TEAMWORK_URI/projects/api/v1/tasks/$TEAMWORK_TASK_ID/comments.json" \
        -u "$TEAMWORK_API_TOKEN"':' \
        -H 'Content-Type: application/json; charset=utf-8' \
        -d "{ \"comment\": { \"body\": \"${body//\"/}\", \"notify\": \"\", \"content-type\": \"text\", \"isprivate\": false } }" )
 
-  echo "$response"
+  log::message "$response"
 }
 
 teamwork::pull_request_opened() {

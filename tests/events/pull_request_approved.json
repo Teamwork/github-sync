@@ -1,0 +1,21 @@
+{
+  "action": "submitted",
+  "number": 1,
+  "pull_request": {
+    "body": "This is the body of the PR. https://xxxx.teamwork.com/#/tasks/123 https://xxx.teamwork.com/#/tasks/456",
+    "head": {
+      "repo": {
+        "full_name": "teamwork/github-sync"
+      }
+    },
+    "html_url": "https://github.com/teamwork/github-sync/pull/2",
+    "title": "This is an example of a title for the PR."
+  },
+  "review": {
+    "state": "approved",
+    "body": "This is the comment of the review."
+  },
+  "sender": {
+    "login": "username"
+  }
+}
