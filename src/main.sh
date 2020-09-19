@@ -18,6 +18,8 @@ main() {
   export TEAMWORK_URI="$2"
   export TEAMWORK_API_TOKEN="$3"
 
+  env::set_environment
+
   # Check if there is a task link in the PR
   local -r pr_body=$(github::get_pr_body)
   local -r task_ids_str=$(teamwork::get_task_id_from_body "$pr_body" )
@@ -46,8 +48,6 @@ main() {
       teamwork::pull_request_review_submitted
     elif [ "$event" == "pull_request_review" ] && [ "$action" == "dismissed" ]; then
       teamwork::pull_request_review_dismissed
-    elif [ "$event" == "pull_request_review_comment" ] && [ "$action" == "deleted" ]; then
-      teamwork::pull_request_review_comment_deleted
     else
       log::message "Operation not allowed"
       exit 0

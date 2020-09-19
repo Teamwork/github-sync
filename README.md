@@ -36,8 +36,6 @@ on:
     types: [opened, closed]
   pull_request_review:
     types: [submitted, dismissed]
-  pull_request_review_comment:
-    types: [created, deleted]
 
 jobs:
   teamwork-sync:

@@ -19,12 +19,17 @@ teamwork::get_task_id_from_body() {
 teamwork::add_comment() {
   local -r body=$1
 
+  if [ "$ENV" == "test" ]; then
+    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Comment: ${body//\"/}"
+    return
+  fi
+
   response=$(curl -X "POST" "$TEAMWORK_URI/projects/api/v1/tasks/$TEAMWORK_TASK_ID/comments.json" \
        -u "$TEAMWORK_API_TOKEN"':' \
        -H 'Content-Type: application/json; charset=utf-8' \
        -d "{ \"comment\": { \"body\": \"${body//\"/}\", \"notify\": \"\", \"content-type\": \"text\", \"isprivate\": false } }" )
 
-  echo "$response"
+  log::message "$response"
 }
 
 teamwork::pull_request_opened() {
@@ -34,17 +39,6 @@ teamwork::pull_request_opened() {
 
   teamwork::add_comment "
   **$user** opened a PR: **$pr_title**
-  [$pr_url]($pr_url)
-  "
-}
-
-teamwork::pull_request_synchronize() {
-  local -r pr_url=$(github::get_pr_url)
-  local -r pr_title=$(github::get_pr_title)
-  local -r user=$(github::get_sender_user)
-
-  teamwork::add_comment "
-  **$user** updated a PR: **$pr_title**
   [$pr_url]($pr_url)
   "
 }
@@ -82,14 +76,4 @@ $comment
 teamwork::pull_request_review_dismissed() {
   local -r user=$(github::get_sender_user)
   teamwork::add_comment "Review dismissed by $user"
-}
-
-teamwork::pull_request_review_comment_deleted() {
-  local -r user=$(github::get_sender_user)
-  teamwork::add_comment "Review deleted by $user"
-}
-
-teamwork::issue_comment_created() {
-  local -r user=$(github::get_sender_user)
-  teamwork::add_comment "Comment added by $user"
 }
