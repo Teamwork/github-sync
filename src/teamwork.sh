@@ -7,7 +7,7 @@ teamwork::get_task_id_from_body() {
   pat='tasks\/([0-9]{1,})'
   while [[ $body =~ $pat ]]; do
     task_ids+=( "${BASH_REMATCH[1]}" )
-    body=${body#*"${BASH_REMATCH[1]}"}
+    body=${body#*"${BASH_REMATCH[0]}"}
   done
 
   local task_ids_str
