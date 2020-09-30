@@ -47,11 +47,19 @@ teamwork::pull_request_closed() {
   local -r user=$(github::get_sender_user)
   local -r pr_url=$(github::get_pr_url)
   local -r pr_title=$(github::get_pr_title)
+  local -r pr_merged=$(github::get_pr_merged)
 
-  teamwork::add_comment "
-  **$user** merged a PR: **$pr_title**
-  [$pr_url]($pr_url)
-  "
+  if [ "$pr_merged" == "true" ]; then
+    teamwork::add_comment "
+**$user** merged a PR: **$pr_title**
+[$pr_url]($pr_url)
+"
+  else
+    teamwork::add_comment "
+**$user** closed a PR without merging: **$pr_title**
+[$pr_url]($pr_url)
+"
+  fi
 }
 
 teamwork::pull_request_review_submitted() {
