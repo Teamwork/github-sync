@@ -1,7 +1,6 @@
 {
   "action": "closed",
   "number": 1,
-  "merged": true,
   "pull_request": {
     "body": "This is the body of the PR. https://xxxx.teamwork.com/#/tasks/123 https://xxx.teamwork.com/#/tasks/456",
     "head": {
@@ -10,7 +9,8 @@
       }
     },
     "html_url": "https://github.com/teamwork/github-sync/pull/1",
-    "title": "This is an example of a title for the PR."
+    "title": "This is an example of a title for the PR.",
+    "merged": true
   },
   "sender": {
     "login": "username"
