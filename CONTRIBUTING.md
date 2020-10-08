@@ -26,3 +26,9 @@ Simulate a pull request has been merged
 ```
 act pull_request -e tests/events/pull_request_merged.json
 ```
+
+Simulate a pull request has been closed without merging
+
+```
+act pull_request -e tests/events/pull_request_closed.json
+```
