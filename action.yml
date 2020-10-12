@@ -1,4 +1,4 @@
-name: 'Teamwork Github Sync'
+name: 'Teamwork GitHub Sync'
 description: 'This action helps you to sync your PRs with tasks in Teamwork to streamline team collaboration and your development workflows.'
 branding:
   icon: 'alert-circle'
