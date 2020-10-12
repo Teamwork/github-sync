@@ -5,7 +5,7 @@
 </p>
 
 <h1 align="center">
-  Teamwork Github Sync
+  Teamwork GitHub Sync
 </h1>
 
 <p align="center">
@@ -55,9 +55,9 @@ When creating a new PR, write in the description of the PR the URL of the task. 
 
 Please note, the comment will be created in Teamwork under the account you have attached to this action. If the API key of the user you are using does not have permissions to access certain projects, the comment will not be created. 
 
-![github pr comment](./.github/assets/github_pr_comment.png)
+![GitHub pr comment](./.github/assets/github_pr_comment.png)
 
-![teamwork pr comment](./.github/assets/teamwork_pr_comment.png)
+![Teamwork pr comment](./.github/assets/teamwork_pr_comment.png)
 
 ## Contributing
 * Open a PR: https://github.com/Teamwork/github-sync/pulls
