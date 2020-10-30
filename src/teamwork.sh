@@ -37,13 +37,13 @@ teamwork::pull_request_opened() {
   local -r pr_title=$(github::get_pr_title)
   local -r user=$(github::get_sender_user)
   local -r pr_stats=$(github::get_pr_patch_stats)
-  local -r pr_stats_array=($pr_stats)
+  IFS=" " read -r -a pr_stats_array <<< "$pr_stats"
 
   teamwork::add_comment "
   **$user** opened a PR: **$pr_title**
   [$pr_url]($pr_url)
   ---
-  Stats: ${$pr_stats_array[0]} commits, ${$pr_stats_array[1]} files changed, +${$pr_stats_array[2]}, -${$pr_stats_array[3]}
+  Stats: ${pr_stats_array[0]} commits, ${pr_stats_array[1]} files changed, +${pr_stats_array[2]}, -${pr_stats_array[3]}
   "
 }
 
@@ -53,14 +53,14 @@ teamwork::pull_request_closed() {
   local -r pr_title=$(github::get_pr_title)
   local -r pr_merged=$(github::get_pr_merged)
   local -r pr_stats=$(github::get_pr_patch_stats)
-  local -r pr_stats_array=($pr_stats)
+  IFS=" " read -r -a pr_stats_array <<< "$pr_stats"
 
   if [ "$pr_merged" == "true" ]; then
     teamwork::add_comment "
 **$user** merged a PR: **$pr_title**
 [$pr_url]($pr_url)
 ---
-  Stats: ${$pr_stats_array[0]} commits, ${$pr_stats_array[1]} files changed, +${$pr_stats_array[2]}, -${$pr_stats_array[3]}
+  Stats: ${pr_stats_array[0]} commits, ${pr_stats_array[1]} files changed, +${pr_stats_array[2]}, -${pr_stats_array[3]}
 "
   else
     teamwork::add_comment "
