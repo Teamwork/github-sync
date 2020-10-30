@@ -36,10 +36,14 @@ teamwork::pull_request_opened() {
   local -r pr_url=$(github::get_pr_url)
   local -r pr_title=$(github::get_pr_title)
   local -r user=$(github::get_sender_user)
+  local -r pr_stats=$(github::get_pr_patch_stats)
+  local -r pr_stats_array=($pr_stats)
 
   teamwork::add_comment "
   **$user** opened a PR: **$pr_title**
   [$pr_url]($pr_url)
+  ---
+  Stats: ${$pr_stats_array[0]} commits, ${$pr_stats_array[1]} files changed, +${$pr_stats_array[2]}, -${$pr_stats_array[3]}
   "
 }
 
