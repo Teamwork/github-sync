@@ -28,6 +28,10 @@ github::get_pr_title() {
   jq --raw-output .pull_request.title "$GITHUB_EVENT_PATH"
 }
 
+github::get_pr_patch_stats() {
+  jq --raw-output '.pull_request | "\(.commits) \(.changed_files) \(.additions) \(.deletions)"'  "$GITHUB_EVENT_PATH"
+}
+
 github::get_pr_merged() {
   jq --raw-output .pull_request.merged "$GITHUB_EVENT_PATH"
 }

@@ -9,7 +9,11 @@
       }
     },
     "html_url": "https://github.com/teamwork/github-sync/pull/1",
-    "title": "This is an example of a title for the PR."
+    "title": "This is an example of a title for the PR.",
+    "commits": 1,
+    "additions": 2,
+    "deletions": 3,
+    "changed_files": 4
   },
   "sender": {
     "login": "username"

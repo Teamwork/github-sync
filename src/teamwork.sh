@@ -36,10 +36,16 @@ teamwork::pull_request_opened() {
   local -r pr_url=$(github::get_pr_url)
   local -r pr_title=$(github::get_pr_title)
   local -r user=$(github::get_sender_user)
+  local -r pr_stats=$(github::get_pr_patch_stats)
+  IFS=" " read -r -a pr_stats_array <<< "$pr_stats"
 
   teamwork::add_comment "
-  **$user** opened a PR: **$pr_title**
-  [$pr_url]($pr_url)
+**$user** opened a PR: **$pr_title**
+[$pr_url]($pr_url)
+
+---
+
+🔢 ${pr_stats_array[0]} commits / 📝 ${pr_stats_array[1]} files updated / ${pr_stats_array[2]} additions / ${pr_stats_array[3]} deletions
   "
 }
 
@@ -74,7 +80,9 @@ teamwork::pull_request_review_submitted() {
     teamwork::add_comment "
 **$user** submitted a review to the PR: **$pr_title**
 [$pr_url]($pr_url)
+
 ---
+
 Review: **$review_state**
 $comment
 "
