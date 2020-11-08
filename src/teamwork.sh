@@ -42,8 +42,10 @@ teamwork::pull_request_opened() {
   teamwork::add_comment "
 **$user** opened a PR: **$pr_title**
 [$pr_url]($pr_url)
+
 ---
-🔢 ${pr_stats_array[0]} commits / 📝 ${pr_stats_array[1]} files updated / ✚ ${pr_stats_array[2]} lines & − ${pr_stats_array[3]} lines
+
+🔢 ${pr_stats_array[0]} commits / 📝 ${pr_stats_array[1]} files updated / ✚ ${pr_stats_array[2]} additions & − ${pr_stats_array[3]} deletions
   "
 }
 
@@ -78,7 +80,9 @@ teamwork::pull_request_review_submitted() {
     teamwork::add_comment "
 **$user** submitted a review to the PR: **$pr_title**
 [$pr_url]($pr_url)
+
 ---
+
 Review: **$review_state**
 $comment
 "
