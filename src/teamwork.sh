@@ -45,7 +45,7 @@ teamwork::pull_request_opened() {
 
 ---
 
-🔢 ${pr_stats_array[0]} commits / 📝 ${pr_stats_array[1]} files updated / ✚ ${pr_stats_array[2]} additions & − ${pr_stats_array[3]} deletions
+🔢 ${pr_stats_array[0]} commits / 📝 ${pr_stats_array[1]} files updated / ${pr_stats_array[2]} additions / ${pr_stats_array[3]} deletions
   "
 }
 
