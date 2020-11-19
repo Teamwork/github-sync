@@ -32,6 +32,38 @@ teamwork::add_comment() {
   log::message "$response"
 }
 
+teamwork::add_tag() {
+  local -r tag_name=$1
+
+  if [ "$ENV" == "test" ]; then
+    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Tag: ${tag_name//\"/}"
+    return
+  fi
+
+  response=$(curl -X "PUT" "$TEAMWORK_URI/projects/api/v1/tasks/$TEAMWORK_TASK_ID/tags.json" \
+       -u "$TEAMWORK_API_TOKEN"':' \
+       -H 'Content-Type: application/json; charset=utf-8' \
+       -d "{ \"tags\": { \"content\": \"${tag_name//\"/}\" } }" )
+
+  log::message "$response"
+}
+
+teamwork::remove_tag() {
+  local -r tag_name=$1
+
+  if [ "$ENV" == "test" ]; then
+    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Tag: ${tag_name//\"/}"
+    return
+  fi
+
+  response=$(curl -X "PUT" "$TEAMWORK_URI/projects/api/v1/tasks/$TEAMWORK_TASK_ID/tags.json" \
+       -u "$TEAMWORK_API_TOKEN"':' \
+       -H 'Content-Type: application/json; charset=utf-8' \
+       -d "{ \"tags\": { \"content\": \"${tag_name//\"/}\" },\"removeProvidedTags\":\"true\" }" )
+
+  log::message "$response"
+}
+
 teamwork::pull_request_opened() {
   local -r pr_url=$(github::get_pr_url)
   local -r pr_title=$(github::get_pr_title)
@@ -49,6 +81,8 @@ teamwork::pull_request_opened() {
 
 🔢 ${pr_stats_array[0]} commits / 📝 ${pr_stats_array[1]} files updated / ${pr_stats_array[2]} additions / ${pr_stats_array[3]} deletions
   "
+
+  teamwork::add_tag "PR Open"
 }
 
 teamwork::pull_request_closed() {
@@ -62,11 +96,14 @@ teamwork::pull_request_closed() {
 **$user** merged a PR: **$pr_title**
 [$pr_url]($pr_url)
 "
+  teamwork::add_tag "PR Merged"
+  teamwork::remove_tag "PR Open"
   else
     teamwork::add_comment "
 **$user** closed a PR without merging: **$pr_title**
 [$pr_url]($pr_url)
 "
+    teamwork::remove_tag "PR Open"
   fi
 }
 
