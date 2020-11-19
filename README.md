@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://www.teamwork.com?ref=github">
-    <img src="https://www.teamwork.com/app/themes/teamwork-theme/dist/images/twork-slate.svg" width="139px" height="30px"/>
+    <img src="./.github/assets/teamwork.svg" width="139px" height="30px"/>
   </a>
 </p>
 
