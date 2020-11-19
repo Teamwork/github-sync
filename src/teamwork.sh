@@ -98,12 +98,14 @@ teamwork::pull_request_closed() {
 "
   teamwork::add_tag "PR Merged"
   teamwork::remove_tag "PR Open"
+  teamwork::remove_tag "PR Approved"
   else
     teamwork::add_comment "
 **$user** closed a PR without merging: **$pr_title**
 [$pr_url]($pr_url)
 "
     teamwork::remove_tag "PR Open"
+    teamwork::remove_tag "PR Approved"
   fi
 }
 
@@ -125,6 +127,7 @@ teamwork::pull_request_review_submitted() {
 Review: **$review_state**
 $comment
 "
+    teamwork::add_tag "PR Approved"
   fi
 }
 
