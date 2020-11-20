@@ -59,6 +59,13 @@ Please note, the comment will be created in Teamwork under the account you have 
 
 ![Teamwork pr comment](./.github/assets/teamwork_pr_comment.png)
 
+Tags are added automatically on the task:
+- A new PR is open: tag `PR Open`
+- A PR is approved: tag `PR Approved` added
+- A PR is merged: tags `PR Open` and `PR Approved` removed, tag `PR merged` added
+- A PR is closed: tags `PR Open` and `PR Approved` removed
+
+
 ## Contributing
 * Open a PR: https://github.com/Teamwork/github-sync/pulls
 * Open an issue: https://github.com/Teamwork/github-sync/issues
