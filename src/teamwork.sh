@@ -36,7 +36,7 @@ teamwork::add_tag() {
   local -r tag_name=$1
 
   if [ "$ENV" == "test" ]; then
-    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Tag: ${tag_name//\"/}"
+    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Tag Added: ${tag_name//\"/}"
     return
   fi
 
@@ -52,7 +52,7 @@ teamwork::remove_tag() {
   local -r tag_name=$1
 
   if [ "$ENV" == "test" ]; then
-    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Tag: ${tag_name//\"/}"
+    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Tag Removed: ${tag_name//\"/}"
     return
   fi
 
