@@ -76,7 +76,7 @@ teamwork::pull_request_opened() {
 **$user** opened a PR: **$pr_title**
 [$pr_url]($pr_url)
 ---
-  ${pr_body//###/####} 
+  ${pr_body//###/####} \n
 ---
 
 🔢 ${pr_stats_array[0]} commits / 📝 ${pr_stats_array[1]} files updated / ${pr_stats_array[2]} additions / ${pr_stats_array[3]} deletions
