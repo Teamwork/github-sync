@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://www.teamwork.com?ref=github">
-    <img src="https://www.teamwork.com/app/themes/teamwork-theme/dist/images/twork-slate.svg" width="139px" height="30px"/>
+    <img src="./.github/assets/teamwork.svg" width="139px" height="30px"/>
   </a>
 </p>
 
@@ -58,6 +58,13 @@ Please note, the comment will be created in Teamwork under the account you have 
 ![GitHub pr comment](./.github/assets/github_pr_comment.png)
 
 ![Teamwork pr comment](./.github/assets/teamwork_pr_comment.png)
+
+Tags are added automatically on the task:
+- A new PR is open: tag `PR Open`
+- A PR is approved: tag `PR Approved` added
+- A PR is merged: tags `PR Open` and `PR Approved` removed, tag `PR merged` added
+- A PR is closed: tags `PR Open` and `PR Approved` removed
+
 
 ## Contributing
 * Open a PR: https://github.com/Teamwork/github-sync/pulls
