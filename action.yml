@@ -13,6 +13,9 @@ inputs:
   TEAMWORK_API_TOKEN:
     description: 'Teamwork API token'
     required: true
+  AUTOMATIC_TAGGING:
+    description: 'Do you want to enable automatic tagging: true/false'
+    required: false
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -20,3 +23,4 @@ runs:
     - ${{ inputs.GITHUB_TOKEN }}
     - ${{ inputs.TEAMWORK_URI }}
     - ${{ inputs.TEAMWORK_API_TOKEN }}
+    - ${{ inputs.AUTOMATIC_TAGGING }}

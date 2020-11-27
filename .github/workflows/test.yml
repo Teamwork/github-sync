@@ -17,3 +17,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TEAMWORK_URI: "localhost"
           TEAMWORK_API_TOKEN: "test_api_token"
+          AUTOMATIC_TAGGING: true

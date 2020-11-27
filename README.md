@@ -47,6 +47,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TEAMWORK_URI: ${{ secrets.TEAMWORK_URI }}
           TEAMWORK_API_TOKEN: ${{ secrets.TEAMWORK_API_TOKEN }}
+          AUTOMATIC_TAGGING: false
 
 ```
 
@@ -59,7 +60,7 @@ Please note, the comment will be created in Teamwork under the account you have 
 
 ![Teamwork pr comment](./.github/assets/teamwork_pr_comment.png)
 
-Tags are added automatically on the task:
+Tags are added automatically on the task if you are have the option `AUTOMATIC_TAGGING` set to `true` and the tag exists in you targeting project:
 - A new PR is open: tag `PR Open`
 - A PR is approved: tag `PR Approved` added
 - A PR is merged: tags `PR Open` and `PR Approved` removed, tag `PR merged` added

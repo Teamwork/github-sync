@@ -12,11 +12,11 @@ main() {
   # Ensure env vars and args exist
   ensure::env_variable_exist "GITHUB_REPOSITORY"
   ensure::env_variable_exist "GITHUB_EVENT_PATH"
-  ensure::total_args 3 "$@"
 
   export GITHUB_TOKEN="$1"
   export TEAMWORK_URI="$2"
   export TEAMWORK_API_TOKEN="$3"
+  export AUTOMATIC_TAGGING="$4"
 
   env::set_environment
 

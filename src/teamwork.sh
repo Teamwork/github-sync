@@ -40,12 +40,14 @@ teamwork::add_tag() {
     return
   fi
 
-  response=$(curl -X "PUT" "$TEAMWORK_URI/projects/api/v1/tasks/$TEAMWORK_TASK_ID/tags.json" \
+  if [ "$AUTOMATIC_TAGGING" == true ]; then
+    response=$(curl -X "PUT" "$TEAMWORK_URI/projects/api/v1/tasks/$TEAMWORK_TASK_ID/tags.json" \
        -u "$TEAMWORK_API_TOKEN"':' \
        -H 'Content-Type: application/json; charset=utf-8' \
        -d "{ \"tags\": { \"content\": \"${tag_name//\"/}\" } }" )
 
-  log::message "$response"
+    log::message "$response"
+  fi
 }
 
 teamwork::remove_tag() {
@@ -56,12 +58,14 @@ teamwork::remove_tag() {
     return
   fi
 
-  response=$(curl -X "PUT" "$TEAMWORK_URI/projects/api/v1/tasks/$TEAMWORK_TASK_ID/tags.json" \
-       -u "$TEAMWORK_API_TOKEN"':' \
-       -H 'Content-Type: application/json; charset=utf-8' \
-       -d "{ \"tags\": { \"content\": \"${tag_name//\"/}\" },\"removeProvidedTags\":\"true\" }" )
+  if [ "$AUTOMATIC_TAGGING" == true ]; then
+    response=$(curl -X "PUT" "$TEAMWORK_URI/projects/api/v1/tasks/$TEAMWORK_TASK_ID/tags.json" \
+         -u "$TEAMWORK_API_TOKEN"':' \
+         -H 'Content-Type: application/json; charset=utf-8' \
+         -d "{ \"tags\": { \"content\": \"${tag_name//\"/}\" },\"removeProvidedTags\":\"true\" }" )
 
-  log::message "$response"
+    log::message "$response"
+  fi
 }
 
 teamwork::pull_request_opened() {
