@@ -36,7 +36,7 @@ teamwork::add_tag() {
   local -r tag_name=$1
 
   if [ "$ENV" == "test" ]; then
-    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Tag: ${tag_name//\"/}"
+    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Tag Added: ${tag_name//\"/}"
     return
   fi
 
@@ -54,7 +54,7 @@ teamwork::remove_tag() {
   local -r tag_name=$1
 
   if [ "$ENV" == "test" ]; then
-    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Tag: ${tag_name//\"/}"
+    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Tag Removed: ${tag_name//\"/}"
     return
   fi
 
@@ -80,7 +80,7 @@ teamwork::pull_request_opened() {
 **$user** opened a PR: **$pr_title**
 [$pr_url]($pr_url)
 ---
-  ${pr_body//###/####} 
+  ${pr_body//###/####} \n
 ---
 
 🔢 ${pr_stats_array[0]} commits / 📝 ${pr_stats_array[1]} files updated / ${pr_stats_array[2]} additions / ${pr_stats_array[3]} deletions
@@ -102,12 +102,14 @@ teamwork::pull_request_closed() {
 "
   teamwork::add_tag "PR Merged"
   teamwork::remove_tag "PR Open"
+  teamwork::remove_tag "PR Approved"
   else
     teamwork::add_comment "
 **$user** closed a PR without merging: **$pr_title**
 [$pr_url]($pr_url)
 "
     teamwork::remove_tag "PR Open"
+    teamwork::remove_tag "PR Approved"
   fi
 }
 
@@ -129,6 +131,7 @@ teamwork::pull_request_review_submitted() {
 Review: **$review_state**
 $comment
 "
+    teamwork::add_tag "PR Approved"
   fi
 }
 
