@@ -40,7 +40,7 @@ main() {
 
     export TEAMWORK_TASK_ID=$task_id
 
-    if [ "$event" == "pull_request" ] && [ "$action" == "opened" ]; then
+    if [ "$event" == "pull_request" ] && [ "$action" == "review_requested" ]; then
       teamwork::pull_request_opened
     elif [ "$event" == "pull_request" ] && [ "$action" == "closed" ]; then
       teamwork::pull_request_closed
