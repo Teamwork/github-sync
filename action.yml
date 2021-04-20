@@ -17,14 +17,17 @@ inputs:
     description: 'Do you want to enable automatic tagging: true/false'
     required: false
   BOARD_COLUMN_OPENED:
-    description: 'The case-sensiteve column name of the column you'd like the task to be moved to once the PR has been opened'
+    description: 'The case-sensiteve column name of the column you would like the task to be moved to once the PR has been opened'
     required: false
+    default: ''
   BOARD_COLUMN_MERGED:
-    description: 'The case-sensiteve column name of the column you'd like the task to be moved to once the PR has been merged'
+    description: 'The case-sensiteve column name of the column you would like the task to be moved to once the PR has been merged'
     required: false
+    default: ''
   BOARD_COLUMN_CLOSED:
-    description: 'The case-sensiteve column name of the column you'd like the task to be moved to if the PR was closed without being merged'
+    description: 'The case-sensiteve column name of the column you would like the task to be moved to if the PR was closed without being merged'
     required: false
+    default: ''
 runs:
   using: 'docker'
   image: 'Dockerfile'
