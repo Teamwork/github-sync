@@ -16,6 +16,18 @@ inputs:
   AUTOMATIC_TAGGING:
     description: 'Do you want to enable automatic tagging: true/false'
     required: false
+  BOARD_COLUMN_OPENED:
+    description: 'The case-sensiteve column name of the column you'd like the task to be moved to once the PR has been opened'
+    required: false
+    default: ''
+  BOARD_COLUMN_MERGED:
+    description: 'The case-sensiteve column name of the column you'd like the task to be moved to once the PR has been merged'
+    required: false
+    default: ''
+  BOARD_COLUMN_CLOSED:
+    description: 'The case-sensiteve column name of the column you'd like the task to be moved to if the PR was closed without being merged'
+    required: false
+    default: ''
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -24,3 +36,6 @@ runs:
     - ${{ inputs.TEAMWORK_URI }}
     - ${{ inputs.TEAMWORK_API_TOKEN }}
     - ${{ inputs.AUTOMATIC_TAGGING }}
+    - ${{ inputs.BOARD_COLUMN_OPENED }}
+    - ${{ inputs.BOARD_COLUMN_MERGED }}
+    - ${{ inputs.BOARD_COLUMN_CLOSED }}
