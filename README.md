@@ -48,9 +48,9 @@ jobs:
           TEAMWORK_URI: ${{ secrets.TEAMWORK_URI }}
           TEAMWORK_API_TOKEN: ${{ secrets.TEAMWORK_API_TOKEN }}
           AUTOMATIC_TAGGING: false
-          BOARD_COLUMN_OPENED: 'PR Open'
-          BOARD_COLUMN_MERGED: 'Ready to Test'
-          BOARD_COLUMN_CLOSED: 'Rejected'
+          BOARD_COLUMN_OPENED: "PR Open"
+          BOARD_COLUMN_MERGED: "Ready to Test"
+          BOARD_COLUMN_CLOSED: "Rejected"
 
 ```
 
