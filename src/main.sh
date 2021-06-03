@@ -17,6 +17,9 @@ main() {
   export TEAMWORK_URI="$2"
   export TEAMWORK_API_TOKEN="$3"
   export AUTOMATIC_TAGGING="$4"
+  export BOARD_COLUMN_OPENED="$5"
+  export BOARD_COLUMN_MERGED="$6"
+  export BOARD_COLUMN_CLOSED="$7"
 
   env::set_environment
 
@@ -39,6 +42,7 @@ main() {
     log::message "Task found with the id: $task_id"
 
     export TEAMWORK_TASK_ID=$task_id
+    export TEAMWORK_PROJECT_ID="$(teamwork::get_project_id_from_task "$task_id")"
 
     if [ "$event" == "pull_request" ] && [ "$action" == "opened" ]; then
       teamwork::pull_request_opened
