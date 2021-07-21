@@ -71,6 +71,8 @@ teamwork::remove_tag() {
 teamwork::pull_request_opened() {
   local -r pr_url=$(github::get_pr_url)
   local -r pr_title=$(github::get_pr_title)
+  local -r head_ref=$(github::get_head_ref)
+  local -r base_ref=$(github::get_base_ref)
   local -r user=$(github::get_sender_user)
   local -r pr_stats=$(github::get_pr_patch_stats)
   local -r pr_body=$(github::get_pr_body)
@@ -79,14 +81,16 @@ teamwork::pull_request_opened() {
   teamwork::add_comment "
 **$user** opened a PR: **$pr_title**
 [$pr_url]($pr_url)
+`$base_ref` <- `$head_ref`
 
 ---
 
-${pr_body//###/####} 
+${pr_body}
 
 ---
 
 🔢 ${pr_stats_array[0]} commits / 📝 ${pr_stats_array[1]} files updated / ➕ ${pr_stats_array[2]} additions / ➖ ${pr_stats_array[3]} deletions
+
   "
 
   teamwork::add_tag "PR Open"
