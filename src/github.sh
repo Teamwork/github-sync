@@ -13,7 +13,7 @@ github::get_pr_number() {
 }
 
 github::get_pr_body() {
-  jq --raw-output .pull_request.body "$GITHUB_EVENT_PATH" | sed -r 's/^#{1,3}\ /#### /'
+  jq --raw-output .pull_request.body "$GITHUB_EVENT_PATH" | sed -r 's/^#{1,3}\ /#### /g'
 }
 
 github::get_head_ref() {
