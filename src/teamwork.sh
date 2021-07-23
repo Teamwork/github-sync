@@ -81,7 +81,7 @@ teamwork::pull_request_opened() {
   teamwork::add_comment "
 **$user** opened a PR: **$pr_title**
 [$pr_url]($pr_url)
-\`$base_ref\` <- \`$head_ref\`
+\`$base_ref\` ⬅️ \`$head_ref\`
 
 ---
 
