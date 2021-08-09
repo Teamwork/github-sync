@@ -46,7 +46,7 @@ main() {
     project_id="$(teamwork::get_project_id_from_task "$task_id")"
     export TEAMWORK_PROJECT_ID=$project_id
 
-    if [ "$event" == "pull_request" ] && [ "$action" == "opened" ] || [ "$action" == "reopened" ]; then
+    if [ "$event" == "pull_request" ] && [ "$action" == "opened" ]; then
       teamwork::pull_request_opened
     elif [ "$event" == "pull_request" ] && [ "$action" == "closed" ]; then
       teamwork::pull_request_closed
