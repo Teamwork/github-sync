@@ -54,6 +54,8 @@ main() {
       teamwork::pull_request_review_submitted
     elif [ "$event" == "pull_request_review" ] && [ "$action" == "dismissed" ]; then
       teamwork::pull_request_review_dismissed
+    elif [ "$ENV" == "test" ]; then # always run pull_request_opened at the very least when in test
+      teamwork::pull_request_opened
     else
       log::message "Operation not allowed"
       exit 0
