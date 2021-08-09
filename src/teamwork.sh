@@ -64,8 +64,7 @@ teamwork::move_task_to_column() {
     return
   fi
 
-  local -r column_id=$(teamwork::get_matching_board_column_id $column_name)
-
+  local -r column_id=$(teamwork::get_matching_board_column_id "$column_name")
   if [ -z "$column_id" ]; then
     log::message "Failed to find a matching board column for '$column_name'"
     return

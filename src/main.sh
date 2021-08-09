@@ -42,7 +42,8 @@ main() {
     log::message "Task found with the id: $task_id"
 
     export TEAMWORK_TASK_ID=$task_id
-    export TEAMWORK_PROJECT_ID="$(teamwork::get_project_id_from_task "$task_id")"
+    local -r project_id="$(teamwork::get_project_id_from_task "$task_id")"
+    export TEAMWORK_PROJECT_ID=$project_id
 
     if [ "$event" == "pull_request" ] && [ "$action" == "opened" ]; then
       teamwork::pull_request_opened
