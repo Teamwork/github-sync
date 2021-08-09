@@ -37,15 +37,16 @@ main() {
 
   log::message "Event: $event - Action: $action"
 
+  local project_id
   IFS=',' read -r -a task_ids <<< "$task_ids_str"
   for task_id in "${task_ids[@]}"; do
     log::message "Task found with the id: $task_id"
 
     export TEAMWORK_TASK_ID=$task_id
-    local project_id="$(teamwork::get_project_id_from_task "$task_id")"
+    project_id="$(teamwork::get_project_id_from_task "$task_id")"
     export TEAMWORK_PROJECT_ID=$project_id
 
-    if [ "$event" == "pull_request" ] && [ "$action" == "opened" ]; then
+    if [ "$event" == "pull_request" ] && [ "$action" == "opened" ] || [ "$action" == "reopened" ]; then
       teamwork::pull_request_opened
     elif [ "$event" == "pull_request" ] && [ "$action" == "closed" ]; then
       teamwork::pull_request_closed
