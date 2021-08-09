@@ -37,12 +37,13 @@ main() {
 
   log::message "Event: $event - Action: $action"
 
+  local project_id
   IFS=',' read -r -a task_ids <<< "$task_ids_str"
   for task_id in "${task_ids[@]}"; do
     log::message "Task found with the id: $task_id"
 
     export TEAMWORK_TASK_ID=$task_id
-    local -r project_id="$(teamwork::get_project_id_from_task "$task_id")"
+    project_id="$(teamwork::get_project_id_from_task "$task_id")"
     export TEAMWORK_PROJECT_ID=$project_id
 
     if [ "$event" == "pull_request" ] && [ "$action" == "opened" ]; then
@@ -53,6 +54,8 @@ main() {
       teamwork::pull_request_review_submitted
     elif [ "$event" == "pull_request_review" ] && [ "$action" == "dismissed" ]; then
       teamwork::pull_request_review_dismissed
+    elif [ "$ENV" == "test" ]; then # always run pull_request_opened at the very least when in test
+      teamwork::pull_request_opened
     else
       log::message "Operation not allowed"
       exit 0
