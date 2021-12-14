@@ -46,6 +46,12 @@ main() {
     project_id="$(teamwork::get_project_id_from_task "$task_id")"
     export TEAMWORK_PROJECT_ID=$project_id
 
+    ignored_project_ids=($IGNORE_PROJECT_IDS)
+    if (( ${#ignored_project_ids[@]} != 0 )) || utils::in_array $1 "${ignored_project_ids[*]}"
+        log::message "ignored due to IGNORE_PROJECT_IDS"
+        exit 0
+    fi
+
     if [ "$event" == "pull_request" ] && [ "$action" == "opened" ]; then
       teamwork::pull_request_opened
     elif [ "$event" == "pull_request" ] && [ "$action" == "closed" ]; then
