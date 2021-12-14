@@ -17,7 +17,7 @@ env::set_environment() {
   fi
 }
 
-in_array {
+utils::in_array() {
   ARRAY=$2
   for e in ${ARRAY[*]}
   do
