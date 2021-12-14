@@ -46,7 +46,7 @@ main() {
     project_id="$(teamwork::get_project_id_from_task "$task_id")"
     export TEAMWORK_PROJECT_ID=$project_id
 
-    ignored_project_ids=($IGNORE_PROJECT_IDS)
+    ignored_project_ids=("$IGNORE_PROJECT_IDS")
     if (( ${#ignored_project_ids[@]} != 0 )) || utils::in_array "$1" "${ignored_project_ids[*]}"
     then
         log::message "ignored due to IGNORE_PROJECT_IDS"
