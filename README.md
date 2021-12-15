@@ -52,7 +52,7 @@ jobs:
           BOARD_COLUMN_MERGED: 'Ready to Test'
           BOARD_COLUMN_CLOSED: 'Rejected'
         env:
-          IGNORE_PROJECT_IDS="1 2 3"
+          IGNORE_PROJECT_IDS: '1 2 3'
 
 ```
 
