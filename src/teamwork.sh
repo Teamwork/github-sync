@@ -91,7 +91,7 @@ teamwork::add_comment() {
     return
   fi
 
-  response=$(curl -X "POST" "$TEAMWORK_URI/projects/api/v1/tasks/$TEAMWORK_TASK_ID/comments.json" \
+  response=$(curl -X "POST" "$TEAMWORK_URI/tasks/$TEAMWORK_TASK_ID/comments.json" \
        -u "$TEAMWORK_API_TOKEN"':' \
        -H 'Content-Type: application/json; charset=utf-8' \
        -d "{ \"comment\": { \"body\": \"${body//\"/}\", \"notify\": true, \"content-type\": \"text\", \"isprivate\": false } }" )
@@ -108,7 +108,7 @@ teamwork::add_tag() {
   fi
 
   if [ "$AUTOMATIC_TAGGING" == true ]; then
-    response=$(curl -X "PUT" "$TEAMWORK_URI/projects/api/v1/tasks/$TEAMWORK_TASK_ID/tags.json" \
+    response=$(curl -X "PUT" "$TEAMWORK_URI/tasks/$TEAMWORK_TASK_ID/tags.json" \
        -u "$TEAMWORK_API_TOKEN"':' \
        -H 'Content-Type: application/json; charset=utf-8' \
        -d "{ \"tags\": { \"content\": \"${tag_name//\"/}\" } }" )
@@ -126,7 +126,7 @@ teamwork::remove_tag() {
   fi
 
   if [ "$AUTOMATIC_TAGGING" == true ]; then
-    response=$(curl -X "PUT" "$TEAMWORK_URI/projects/api/v1/tasks/$TEAMWORK_TASK_ID/tags.json" \
+    response=$(curl -X "PUT" "$TEAMWORK_URI/tasks/$TEAMWORK_TASK_ID/tags.json" \
          -u "$TEAMWORK_API_TOKEN"':' \
          -H 'Content-Type: application/json; charset=utf-8' \
          -d "{ \"tags\": { \"content\": \"${tag_name//\"/}\" },\"removeProvidedTags\":\"true\" }" )
