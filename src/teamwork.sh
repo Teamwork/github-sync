@@ -94,7 +94,16 @@ teamwork::add_comment() {
   response=$(curl -X "POST" "$TEAMWORK_URI/tasks/$TEAMWORK_TASK_ID/comments.json" \
        -u "$TEAMWORK_API_TOKEN"':' \
        -H 'Content-Type: application/json; charset=utf-8' \
-       -d "{ \"comment\": { \"body\": \"${body//\"/}\", \"notify\": true, \"content-type\": \"text\", \"isprivate\": false } }" )
+       -d "{
+          \"comment\": {
+              \"body\": \"${body//\"/}\",
+              \"notify\": true,
+              \"content-type\":
+              \"text\",
+              \"isprivate\": $([ "$MAKE_COMMENTS_PRIVATE" == true ] && echo true || echo false)
+          }
+      }"
+  )
 
   log::message "$response"
 }
