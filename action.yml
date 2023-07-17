@@ -16,6 +16,9 @@ inputs:
   AUTOMATIC_TAGGING:
     description: 'Do you want to enable automatic tagging: true/false'
     required: false
+  MAKE_COMMENTS_PRIVATE:
+    description: 'Do you want to make all comments private to your organisation: true/false'
+    required: false
   BOARD_COLUMN_OPENED:
     description: 'The case-sensitive column name of the column you would like the task to be moved to once the PR has been opened'
     required: false
@@ -36,6 +39,7 @@ runs:
     - ${{ inputs.TEAMWORK_URI }}
     - ${{ inputs.TEAMWORK_API_TOKEN }}
     - ${{ inputs.AUTOMATIC_TAGGING }}
+    - ${{ inputs.MAKE_COMMENTS_PRIVATE }}
     - ${{ inputs.BOARD_COLUMN_OPENED }}
     - ${{ inputs.BOARD_COLUMN_MERGED }}
     - ${{ inputs.BOARD_COLUMN_CLOSED }}

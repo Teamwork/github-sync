@@ -48,6 +48,7 @@ jobs:
           TEAMWORK_URI: ${{ secrets.TEAMWORK_URI }}
           TEAMWORK_API_TOKEN: ${{ secrets.TEAMWORK_API_TOKEN }}
           AUTOMATIC_TAGGING: false
+          MAKE_COMMENTS_PRIVATE: false
           BOARD_COLUMN_OPENED: 'PR Open'
           BOARD_COLUMN_MERGED: 'Ready to Test'
           BOARD_COLUMN_CLOSED: 'Rejected'
@@ -70,6 +71,8 @@ Tags are added automatically on the task if you are have the option `AUTOMATIC_T
 - A PR is approved: tag `PR Approved` added
 - A PR is merged: tags `PR Open` and `PR Approved` removed, tag `PR merged` added
 - A PR is closed: tags `PR Open` and `PR Approved` removed
+
+Using the `MAKE_COMMENTS_PRIVATE` flag, you can also optionally set all comments on Teamwork to be private to your organisation.
 
 You may also specify columns you'd like the task to be moved to on every stage of the PR:
 - `BOARD_COLUMN_OPENED`: The case-sensitive column name of the column you'd like the task to be moved to once the PR has been opened
