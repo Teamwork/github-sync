@@ -25,6 +25,8 @@ main() {
 
   # Check if there is a task link in the PR
   local -r pr_body=$(github::get_pr_body)
+  log::message "pr body: $pr_body"
+
   local -r task_ids_str=$(teamwork::get_task_id_from_body "$pr_body" )
 
   if [ "$task_ids_str" == "" ]; then
