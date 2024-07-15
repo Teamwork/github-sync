@@ -18,8 +18,10 @@ main() {
   export TEAMWORK_API_TOKEN="$3"
   export AUTOMATIC_TAGGING="$4"
   export BOARD_COLUMN_OPENED="$5"
-  export BOARD_COLUMN_MERGED="$6"
-  export BOARD_COLUMN_CLOSED="$7"
+  export BOARD_COLUMN_APPROVED="$6"
+  export BOARD_COLUMN_CHANGES_REQUESTED="$7"
+  export BOARD_COLUMN_MERGED="$8"
+  export BOARD_COLUMN_CLOSED="$9"
 
   env::set_environment
 
