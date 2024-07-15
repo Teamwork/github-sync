@@ -49,6 +49,8 @@ jobs:
           TEAMWORK_API_TOKEN: ${{ secrets.TEAMWORK_API_TOKEN }}
           AUTOMATIC_TAGGING: false
           BOARD_COLUMN_OPENED: 'PR Open'
+          BOARD_COLUMN_APPROVED: 'PR Approved'
+          BOARD_COLUMN_CHANGES_REQUESTED: 'Changes Requested'
           BOARD_COLUMN_MERGED: 'Ready to Test'
           BOARD_COLUMN_CLOSED: 'Rejected'
         env:
@@ -73,6 +75,8 @@ Tags are added automatically on the task if you are have the option `AUTOMATIC_T
 
 You may also specify columns you'd like the task to be moved to on every stage of the PR:
 - `BOARD_COLUMN_OPENED`: The case-sensitive column name of the column you'd like the task to be moved to once the PR has been opened
+- `BOARD_COLUMN_APPROVED`: The case-sensitive column name of the column you'd like the task to be moved to once the PR has been approved
+- `BOARD_COLUMN_CHANGES_REQUESTED`: The case-sensitive column name of the column you'd like the task to be moved to once the PR has changes requested
 - `BOARD_COLUMN_MERGED`: The case-sensitive column name of the column you'd like the task to be moved to once the PR has been merged
 - `BOARD_COLUMN_CLOSED`: The case-sensitive column name of the column you'd like the task to be moved to if the PR was closed without being merged
 
