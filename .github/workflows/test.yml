@@ -16,7 +16,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TEAMWORK_URI: "localhost"
           TEAMWORK_API_TOKEN: "test_api_token"
-          AUTOMATIC_TAGGING: true
           BOARD_COLUMN_OPENED: "PR Open"
+          BOARD_COLUMN_APPROVED: 'PR Approved'
+          BOARD_COLUMN_CHANGES_REQUESTED: 'Changes Requested'
           BOARD_COLUMN_MERGED: "Ready to Test"
           BOARD_COLUMN_CLOSED: "Rejected"

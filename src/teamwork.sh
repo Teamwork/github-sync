@@ -209,6 +209,19 @@ Review: **$review_state**
 $comment
 "
     teamwork::add_tag "PR Approved"
+    teamwork::move_task_to_column "$BOARD_COLUMN_APPROVED"
+  elif [ "$review_state" == "changes_requested" ]; then
+    teamwork::add_comment "
+**$user** requested changes to the PR: **$pr_title**
+[$pr_url]($pr_url)
+
+---
+
+Review: **$review_state**
+$comment
+"
+    teamwork::add_tag "PR Changes Requested"
+    teamwork::move_task_to_column "$BOARD_COLUMN_CHANGES_REQUESTED"
   fi
 }
 
