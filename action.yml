@@ -24,6 +24,10 @@ inputs:
     description: 'The case-sensitive column name of the column you would like the task to be moved to once the PR has been merged'
     required: false
     default: ''
+  BOARD_COLUMN_REVIEWED:
+    description: 'The case-sensitive column name of the column you would like the task to be moved to once the PR has been reviewed'
+    required: false
+    default: ''
   BOARD_COLUMN_CLOSED:
     description: 'The case-sensitive column name of the column you would like the task to be moved to if the PR was closed without being merged'
     required: false
@@ -38,4 +42,5 @@ runs:
     - ${{ inputs.AUTOMATIC_TAGGING }}
     - ${{ inputs.BOARD_COLUMN_OPENED }}
     - ${{ inputs.BOARD_COLUMN_MERGED }}
+    - ${{ inputs.BOARD_COLUMN_REVIEWED }}
     - ${{ inputs.BOARD_COLUMN_CLOSED }}

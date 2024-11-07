@@ -146,21 +146,16 @@ teamwork::pull_request_opened() {
   IFS=" " read -r -a pr_stats_array <<< "$pr_stats"
 
   teamwork::add_comment "
-**$user** opened a PR: **$pr_title**
-[$pr_url]($pr_url)
+**$user** opened a PR: **[$pr_title]($pr_url)**
 \`$base_ref\` ⬅️ \`$head_ref\`
 
 ---
 
 ${pr_body}
-
----
-
-🔢 ${pr_stats_array[0]} commits / 📝 ${pr_stats_array[1]} files updated / ➕ ${pr_stats_array[2]} additions / ➖ ${pr_stats_array[3]} deletions
-
   "
 
   teamwork::add_tag "PR Open"
+  teamwork::remove_tag "PR Merged"
   teamwork::move_task_to_column "$BOARD_COLUMN_OPENED"
 }
 
@@ -178,6 +173,7 @@ teamwork::pull_request_closed() {
   teamwork::add_tag "PR Merged"
   teamwork::remove_tag "PR Open"
   teamwork::remove_tag "PR Approved"
+  teamwork::remove_tag "Changes Requested"
   teamwork::move_task_to_column "$BOARD_COLUMN_MERGED"
   else
     teamwork::add_comment "
@@ -186,6 +182,7 @@ teamwork::pull_request_closed() {
 "
     teamwork::remove_tag "PR Open"
     teamwork::remove_tag "PR Approved"
+    teamwork::remove_tag "Changes Requested"
     teamwork::move_task_to_column "$BOARD_COLUMN_CLOSED"
   fi
 }
@@ -197,18 +194,34 @@ teamwork::pull_request_review_submitted() {
   local -r review_state=$(github::get_review_state)
   local -r comment=$(github::get_review_comment)
 
-  # Only add a message if the PR has been approved
+  # Message when PR has been approved
   if [ "$review_state" == "approved" ]; then
     teamwork::add_comment "
-**$user** submitted a review to the PR: **$pr_title**
-[$pr_url]($pr_url)
+**$user** submitted a review to the PR: **[$pr_title]($pr_url)**
 
 ---
 
-Review: **$review_state**
+Review: **$review_state ✅**
 $comment
 "
     teamwork::add_tag "PR Approved"
+    teamwork::remove_tag "PR Changes Requested"
+    teamwork::move_task_to_column "$BOARD_COLUMN_REVIEWED"
+  fi
+
+  # Add a message if the PR has change requested
+  if [ "$review_state" == "changes_requested" ]; then
+    teamwork::add_comment "
+**$user** submitted a change request to the PR: **[$pr_title]($pr_url)**
+
+---
+
+Review: **$review_state 😔**
+$comment
+"
+    teamwork::add_tag "PR Changes Requested"
+    teamwork::remove_tag "PR Approved"
+    teamwork::move_task_to_column "$BOARD_COLUMN_REVIEWED"
   fi
 }
 
