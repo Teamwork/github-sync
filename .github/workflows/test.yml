@@ -20,3 +20,4 @@ jobs:
           BOARD_COLUMN_OPENED: "PR Open"
           BOARD_COLUMN_MERGED: "Ready to Test"
           BOARD_COLUMN_CLOSED: "Rejected"
+          BOARD_COLUMN_REVIEWED: "Sprint"
