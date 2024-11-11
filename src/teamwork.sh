@@ -144,6 +144,7 @@ teamwork::pull_request_opened() {
   local -r pr_stats=$(github::get_pr_patch_stats)
   local -r pr_body=$(github::get_pr_body)
   IFS=" " read -r -a pr_stats_array <<< "$pr_stats"
+# TODO: extract actual PR comments from body, exclude Author and Reviewer checklist from PR template
 
   teamwork::add_comment "
 **$user** opened a PR: **[$pr_title]($pr_url)**
@@ -194,7 +195,7 @@ teamwork::pull_request_review_submitted() {
   local -r review_state=$(github::get_review_state)
   local -r comment=$(github::get_review_comment)
 
-  # Message when PR has been approved
+  ## Message when PR has been approved
   if [ "$review_state" == "approved" ]; then
     teamwork::add_comment "
 **$user** submitted a review to the PR: **[$pr_title]($pr_url)**
@@ -202,14 +203,16 @@ teamwork::pull_request_review_submitted() {
 ---
 
 Review: **$review_state ✅**
-$comment
+if [ -z "${VAR}" ]; then
+  Comment: $comment
+fi
 "
     teamwork::add_tag "PR Approved"
     teamwork::remove_tag "PR Changes Requested"
     teamwork::move_task_to_column "$BOARD_COLUMN_REVIEWED"
   fi
 
-  # Add a message if the PR has change requested
+  ## Add a message if the PR has change requested
   if [ "$review_state" == "changes_requested" ]; then
     teamwork::add_comment "
 **$user** submitted a change request to the PR: **[$pr_title]($pr_url)**
@@ -217,7 +220,9 @@ $comment
 ---
 
 Review: **$review_state 😔**
-$comment
+if [ -z "${VAR}" ]; then
+  Comment: $comment
+fi
 "
     teamwork::add_tag "PR Changes Requested"
     teamwork::remove_tag "PR Approved"
