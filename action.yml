@@ -20,6 +20,14 @@ inputs:
     description: 'The case-sensitive column name of the column you would like the task to be moved to once the PR has been opened'
     required: false
     default: ''
+  BOARD_COLUMN_APPROVED:
+    description: 'The case-sensitive column name of the column you would like the task to be moved to once the PR has been approved'
+    required: false
+    default: ''
+  BOARD_COLUMN_CHANGES_REQUESTED:
+    description: 'The case-sensitive column name of the column you would like the task to be moved to once the PR has been approved'
+    required: false
+    default: ''
   BOARD_COLUMN_MERGED:
     description: 'The case-sensitive column name of the column you would like the task to be moved to once the PR has been merged'
     required: false
@@ -37,5 +45,7 @@ runs:
     - ${{ inputs.TEAMWORK_API_TOKEN }}
     - ${{ inputs.AUTOMATIC_TAGGING }}
     - ${{ inputs.BOARD_COLUMN_OPENED }}
+    - ${{ inputs.BOARD_COLUMN_APPROVED }}
+    - ${{ inputs.BOARD_COLUMN_CHANGES_REQUESTED }}
     - ${{ inputs.BOARD_COLUMN_MERGED }}
     - ${{ inputs.BOARD_COLUMN_CLOSED }}
