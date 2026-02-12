@@ -20,6 +20,7 @@ main() {
   export BOARD_COLUMN_OPENED="$5"
   export BOARD_COLUMN_MERGED="$6"
   export BOARD_COLUMN_CLOSED="$7"
+  export LIGHTWEIGHT_COMMENT="$8"
 
   env::set_environment
 
