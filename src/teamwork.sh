@@ -145,7 +145,10 @@ teamwork::pull_request_opened() {
   local -r pr_body=$(github::get_pr_body)
   IFS=" " read -r -a pr_stats_array <<< "$pr_stats"
 
-  teamwork::add_comment "
+  if [ "$LIGHTWEIGHT_COMMENT" == "true" ]; then
+    teamwork::add_comment "[PR]($pr_url) opened by $user"
+  else
+    teamwork::add_comment "
 **$user** opened a PR: **$pr_title**
 [$pr_url]($pr_url)
 \`$base_ref\` ⬅️ \`$head_ref\`
@@ -158,7 +161,8 @@ ${pr_body}
 
 🔢 ${pr_stats_array[0]} commits / 📝 ${pr_stats_array[1]} files updated / ➕ ${pr_stats_array[2]} additions / ➖ ${pr_stats_array[3]} deletions
 
-  "
+"
+  fi
 
   teamwork::add_tag "PR Open"
   teamwork::move_task_to_column "$BOARD_COLUMN_OPENED"
@@ -171,19 +175,27 @@ teamwork::pull_request_closed() {
   local -r pr_merged=$(github::get_pr_merged)
 
   if [ "$pr_merged" == "true" ]; then
-    teamwork::add_comment "
+    if [ "$LIGHTWEIGHT_COMMENT" == "true" ]; then
+      teamwork::add_comment "[PR]($pr_url) merged by $user"
+    else
+      teamwork::add_comment "
 **$user** merged a PR: **$pr_title**
 [$pr_url]($pr_url)
 "
-  teamwork::add_tag "PR Merged"
-  teamwork::remove_tag "PR Open"
-  teamwork::remove_tag "PR Approved"
-  teamwork::move_task_to_column "$BOARD_COLUMN_MERGED"
+    fi
+    teamwork::add_tag "PR Merged"
+    teamwork::remove_tag "PR Open"
+    teamwork::remove_tag "PR Approved"
+    teamwork::move_task_to_column "$BOARD_COLUMN_MERGED"
   else
-    teamwork::add_comment "
+    if [ "$LIGHTWEIGHT_COMMENT" == "true" ]; then
+      teamwork::add_comment "[PR]($pr_url) closed without merging by $user"
+    else
+      teamwork::add_comment "
 **$user** closed a PR without merging: **$pr_title**
 [$pr_url]($pr_url)
 "
+    fi
     teamwork::remove_tag "PR Open"
     teamwork::remove_tag "PR Approved"
     teamwork::move_task_to_column "$BOARD_COLUMN_CLOSED"
@@ -199,7 +211,10 @@ teamwork::pull_request_review_submitted() {
 
   # Only add a message if the PR has been approved
   if [ "$review_state" == "approved" ]; then
-    teamwork::add_comment "
+    if [ "$LIGHTWEIGHT_COMMENT" == "true" ]; then
+      teamwork::add_comment "[PR]($pr_url) approved by $user"
+    else
+      teamwork::add_comment "
 **$user** submitted a review to the PR: **$pr_title**
 [$pr_url]($pr_url)
 
@@ -208,6 +223,7 @@ teamwork::pull_request_review_submitted() {
 Review: **$review_state**
 $comment
 "
+    fi
     teamwork::add_tag "PR Approved"
   fi
 }
