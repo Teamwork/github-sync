@@ -16,22 +16,34 @@ inputs:
   AUTOMATIC_TAGGING:
     description: 'Do you want to enable automatic tagging: true/false'
     required: false
-  BOARD_COLUMN_OPENED:
-    description: 'The case-sensitive column name of the column you would like the task to be moved to once the PR has been opened'
+  WORKFLOW_STAGE_OPENED:
+    description: 'The case-sensitive name of the workflow stage you would like the task to be moved to once the PR has been opened'
     required: false
     default: ''
-  BOARD_COLUMN_MERGED:
-    description: 'The case-sensitive column name of the column you would like the task to be moved to once the PR has been merged'
+  WORKFLOW_STAGE_MERGED:
+    description: 'The case-sensitive name of the workflow stage you would like the task to be moved to once the PR has been merged'
     required: false
     default: ''
-  BOARD_COLUMN_CLOSED:
-    description: 'The case-sensitive column name of the column you would like the task to be moved to if the PR was closed without being merged'
+  WORKFLOW_STAGE_CLOSED:
+    description: 'The case-sensitive name of the workflow stage you would like the task to be moved to if the PR was closed without being merged'
     required: false
     default: ''
   LIGHTWEIGHT_COMMENT:
     description: 'Generate tiny comments with minimal information'
     required: false
     default: 'false'
+  BOARD_COLUMN_OPENED:
+    description: 'Deprecated.'
+    required: false
+    default: ''
+  BOARD_COLUMN_MERGED:
+    description: 'Deprecated.'
+    required: false
+    default: ''
+  BOARD_COLUMN_CLOSED:
+    description: 'Deprecated.'
+    required: false
+    default: ''
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -40,7 +52,10 @@ runs:
     - ${{ inputs.TEAMWORK_URI }}
     - ${{ inputs.TEAMWORK_API_TOKEN }}
     - ${{ inputs.AUTOMATIC_TAGGING }}
+    - ${{ inputs.WORKFLOW_STAGE_OPENED }}
+    - ${{ inputs.WORKFLOW_STAGE_MERGED }}
+    - ${{ inputs.WORKFLOW_STAGE_CLOSED }}
+    - ${{ inputs.LIGHTWEIGHT_COMMENT }}
     - ${{ inputs.BOARD_COLUMN_OPENED }}
     - ${{ inputs.BOARD_COLUMN_MERGED }}
     - ${{ inputs.BOARD_COLUMN_CLOSED }}
-    - ${{ inputs.LIGHTWEIGHT_COMMENT }}

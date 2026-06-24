@@ -17,10 +17,20 @@ main() {
   export TEAMWORK_URI="$2"
   export TEAMWORK_API_TOKEN="$3"
   export AUTOMATIC_TAGGING="$4"
-  export BOARD_COLUMN_OPENED="$5"
-  export BOARD_COLUMN_MERGED="$6"
-  export BOARD_COLUMN_CLOSED="$7"
+  export WORKFLOW_STAGE_OPENED="$5"
+  export WORKFLOW_STAGE_MERGED="$6"
+  export WORKFLOW_STAGE_CLOSED="$7"
   export LIGHTWEIGHT_COMMENT="$8"
+  # BOARD_COLUMN_* are deprecated aliases kept for backwards compatibility.
+  export BOARD_COLUMN_OPENED="${9:-}"
+  export BOARD_COLUMN_MERGED="${10:-}"
+  export BOARD_COLUMN_CLOSED="${11:-}"
+
+  # Fall back to the deprecated BOARD_COLUMN_* inputs when their WORKFLOW_STAGE_*
+  # replacements are not set.
+  : "${WORKFLOW_STAGE_OPENED:=$BOARD_COLUMN_OPENED}"
+  : "${WORKFLOW_STAGE_MERGED:=$BOARD_COLUMN_MERGED}"
+  : "${WORKFLOW_STAGE_CLOSED:=$BOARD_COLUMN_CLOSED}"
 
   env::set_environment
 

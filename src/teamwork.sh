@@ -31,54 +31,57 @@ teamwork::get_project_id_from_task() {
   echo "$response"
 }
 
-teamwork::get_matching_board_column_id() {
-  local -r column_name=$1
+# Resolves a workflow stage name to its "<workflowId> <stageId>" pair within the
+# task's project. Matching is a case-sensitive substring match against the stage
+# name (mirroring the legacy board-column behaviour), and the first match wins.
+# Echoes nothing when no stage name is provided or no stage matches.
+teamwork::get_workflow_stage() {
+  local -r stage_name=$1
 
-  if [ -z "$column_name" ]; then
+  if [ -z "$stage_name" ]; then
     return
   fi
 
   if [ "$ENV" == "test" ]; then
-    echo "$TEAMWORK_PROJECT_ID"
+    echo "$TEAMWORK_PROJECT_ID $TEAMWORK_PROJECT_ID"
     return
   fi
 
-  response=$(
-    curl "$TEAMWORK_URI/projects/$TEAMWORK_PROJECT_ID/boards/columns.json" -u "$TEAMWORK_API_TOKEN"':' |\
-      jq -r --arg column_name "$column_name" '[.columns[] | select(.name | contains($column_name))] | map(.id)[0]'
-  )
-
-  if [ "$response" = "null" ]; then
-    return
-  fi
-
-  echo "$response"
+  # A single call scoped to the project sideloads every stage across the
+  # project's workflow(s); each stage carries its parent workflow id, which the
+  # move endpoint also needs.
+  curl -s "$TEAMWORK_URI/projects/api/v3/workflows.json?projectIds=$TEAMWORK_PROJECT_ID&include=stages" \
+    -u "$TEAMWORK_API_TOKEN"':' |\
+    jq -r --arg stage_name "$stage_name" \
+      '[.included.stages[]? | select(.name | contains($stage_name)) | "\(.workflow.id) \(.id)"][0] // empty'
 }
 
-teamwork::move_task_to_column() {
-  local -r task_id=$TEAMWORK_TASK_ID
-  local -r column_name=$1
+teamwork::move_task_to_stage() {
+  local -r stage_name=$1
 
-  if [ -z "$column_name" ]; then
-    log::message "No column name provided"
+  if [ -z "$stage_name" ]; then
+    log::message "No workflow stage name provided"
     return
   fi
 
-  local -r column_id=$(teamwork::get_matching_board_column_id "$column_name")
-  if [ -z "$column_id" ]; then
-    log::message "Failed to find a matching board column for '$column_name'"
+  local -r stage=$(teamwork::get_workflow_stage "$stage_name")
+  if [ -z "$stage" ]; then
+    log::message "Failed to find a matching workflow stage for '$stage_name'"
     return
   fi
+
+  local workflow_id stage_id
+  read -r workflow_id stage_id <<< "$stage"
 
   if [ "$ENV" == "test" ]; then
-    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Project ID: $TEAMWORK_PROJECT_ID - Column ID: $column_id"
+    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Project ID: $TEAMWORK_PROJECT_ID - Workflow ID: $workflow_id - Stage ID: $stage_id"
     return
   fi
 
-  response=$(curl -X "PUT" "$TEAMWORK_URI/tasks/$TEAMWORK_TASK_ID.json" \
+  response=$(curl -X "PATCH" "$TEAMWORK_URI/projects/api/v3/tasks/$TEAMWORK_TASK_ID/workflows/$workflow_id.json" \
       -u "$TEAMWORK_API_TOKEN"':' \
       -H 'Content-Type: application/json; charset=utf-8' \
-      -d "{ \"todo-item\": { \"columnId\": $column_id } }" )
+      -d "{ \"stageId\": $stage_id, \"positionAfterTask\": -1 }" )
 
   log::message "$response"
 }
@@ -165,7 +168,7 @@ ${pr_body}
   fi
 
   teamwork::add_tag "PR Open"
-  teamwork::move_task_to_column "$BOARD_COLUMN_OPENED"
+  teamwork::move_task_to_stage "$WORKFLOW_STAGE_OPENED"
 }
 
 teamwork::pull_request_closed() {
@@ -186,7 +189,7 @@ teamwork::pull_request_closed() {
     teamwork::add_tag "PR Merged"
     teamwork::remove_tag "PR Open"
     teamwork::remove_tag "PR Approved"
-    teamwork::move_task_to_column "$BOARD_COLUMN_MERGED"
+    teamwork::move_task_to_stage "$WORKFLOW_STAGE_MERGED"
   else
     if [ "$LIGHTWEIGHT_COMMENT" == "true" ]; then
       teamwork::add_comment "[PR]($pr_url) closed without merging by $user"
@@ -198,7 +201,7 @@ teamwork::pull_request_closed() {
     fi
     teamwork::remove_tag "PR Open"
     teamwork::remove_tag "PR Approved"
-    teamwork::move_task_to_column "$BOARD_COLUMN_CLOSED"
+    teamwork::move_task_to_stage "$WORKFLOW_STAGE_CLOSED"
   fi
 }
 
