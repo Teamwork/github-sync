@@ -149,7 +149,7 @@ teamwork::pull_request_opened() {
   IFS=" " read -r -a pr_stats_array <<< "$pr_stats"
 
   if [ "$LIGHTWEIGHT_COMMENT" == "true" ]; then
-    teamwork::add_comment "[PR]($pr_url) opened by $user"
+    teamwork::add_comment "PR [**\"$pr_title\"**]($pr_url) opened by **$user**"
   else
     teamwork::add_comment "
 **$user** opened a PR: **$pr_title**
@@ -179,7 +179,7 @@ teamwork::pull_request_closed() {
 
   if [ "$pr_merged" == "true" ]; then
     if [ "$LIGHTWEIGHT_COMMENT" == "true" ]; then
-      teamwork::add_comment "[PR]($pr_url) merged by $user"
+      teamwork::add_comment "PR [**\"$pr_title\"**]($pr_url) merged by **$user**"
     else
       teamwork::add_comment "
 **$user** merged a PR: **$pr_title**
@@ -192,7 +192,7 @@ teamwork::pull_request_closed() {
     teamwork::move_task_to_stage "$WORKFLOW_STAGE_MERGED"
   else
     if [ "$LIGHTWEIGHT_COMMENT" == "true" ]; then
-      teamwork::add_comment "[PR]($pr_url) closed without merging by $user"
+      teamwork::add_comment "PR [**\"$pr_title\"**]($pr_url) closed without merging by **$user**"
     else
       teamwork::add_comment "
 **$user** closed a PR without merging: **$pr_title**
@@ -215,7 +215,7 @@ teamwork::pull_request_review_submitted() {
   # Only add a message if the PR has been approved
   if [ "$review_state" == "approved" ]; then
     if [ "$LIGHTWEIGHT_COMMENT" == "true" ]; then
-      teamwork::add_comment "[PR]($pr_url) approved by $user"
+      teamwork::add_comment "PR [**\"$pr_title\"**]($pr_url) approved by **$user**"
     else
       teamwork::add_comment "
 **$user** submitted a review to the PR: **$pr_title**
