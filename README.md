@@ -48,9 +48,9 @@ jobs:
           TEAMWORK_URI: ${{ secrets.TEAMWORK_URI }}
           TEAMWORK_API_TOKEN: ${{ secrets.TEAMWORK_API_TOKEN }}
           AUTOMATIC_TAGGING: false
-          BOARD_COLUMN_OPENED: 'PR Open'
-          BOARD_COLUMN_MERGED: 'Ready to Test'
-          BOARD_COLUMN_CLOSED: 'Rejected'
+          WORKFLOW_STAGE_OPENED: 'PR Open'
+          WORKFLOW_STAGE_MERGED: 'Ready to Test'
+          WORKFLOW_STAGE_CLOSED: 'Rejected'
         env:
           IGNORE_PROJECT_IDS: '1 2 3'
 
@@ -71,12 +71,12 @@ Tags are added automatically on the task if you are have the option `AUTOMATIC_T
 - A PR is merged: tags `PR Open` and `PR Approved` removed, tag `PR merged` added
 - A PR is closed: tags `PR Open` and `PR Approved` removed
 
-You may also specify columns you'd like the task to be moved to on every stage of the PR:
-- `BOARD_COLUMN_OPENED`: The case-sensitive column name of the column you'd like the task to be moved to once the PR has been opened
-- `BOARD_COLUMN_MERGED`: The case-sensitive column name of the column you'd like the task to be moved to once the PR has been merged
-- `BOARD_COLUMN_CLOSED`: The case-sensitive column name of the column you'd like the task to be moved to if the PR was closed without being merged
+You may also specify [workflow](https://support.teamwork.com/projects/workflows/workflows-introduction) stages you'd like the task to be moved to on every stage of the PR:
+- `WORKFLOW_STAGE_OPENED`: The case-sensitive name of the workflow stage you'd like the task to be moved to once the PR has been opened
+- `WORKFLOW_STAGE_MERGED`: The case-sensitive name of the workflow stage you'd like the task to be moved to once the PR has been merged
+- `WORKFLOW_STAGE_CLOSED`: The case-sensitive name of the workflow stage you'd like the task to be moved to if the PR was closed without being merged
 
-The column names will be checked against all board columns in the task's project, this will be using a `contains()` method so you may specify part of the name instead of the full name, however this `contains()` check is case-sensitive. The first matching column will be used.
+The stage names will be checked against the stages of every workflow in the task's project, this will be using a `contains()` method so you may specify part of the name instead of the full name, however this `contains()` check is case-sensitive. The first matching stage will be used.
 
 ## Contributing
 * Open a PR: https://github.com/Teamwork/github-sync/pulls
