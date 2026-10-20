@@ -1,0 +1,27 @@
+{
+  "action": "opened",
+  "number": 42,
+  "pull_request": {
+    "number": 42,
+    "title": "Add \"OAuth\" login",
+    "body": "## Summary\r\nAdds OAuth login for http://teamwork:8080/app/tasks/1001\r\n\r\n```sh\r\n# configure the \"client\" secret\r\nexport CONFIG_DIR=C:\\Users\\dev\\config\r\n```",
+    "html_url": "https://github.com/acme/webapp/pull/42",
+    "head": {
+      "ref": "feature/oauth",
+      "repo": {
+        "full_name": "acme/webapp"
+      }
+    },
+    "base": {
+      "ref": "main"
+    },
+    "commits": 3,
+    "changed_files": 5,
+    "additions": 120,
+    "deletions": 8,
+    "merged": false
+  },
+  "sender": {
+    "login": "octocat"
+  }
+}

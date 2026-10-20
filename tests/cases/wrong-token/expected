@@ -1,0 +1,10 @@
+exit code: 0
+
+GET /projects/api/v1/tasks/1001.json -> 401
+
+POST /tasks/1001/comments.json -> 401
+  comment:
+    body: "PR [**Add OAuth login**](https://github.com/acme/webapp/pull/42) opened by **octocat**"
+    content-type: "text"
+    isprivate: false
+    notify: true

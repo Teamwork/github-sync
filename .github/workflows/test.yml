@@ -20,3 +20,5 @@ jobs:
           WORKFLOW_STAGE_OPENED: "PR Open"
           WORKFLOW_STAGE_MERGED: "Ready to Test"
           WORKFLOW_STAGE_CLOSED: "Rejected"
+      - name: Run the tests against a mock Teamwork API
+        run: ./tests/run.sh

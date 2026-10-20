@@ -1,0 +1,20 @@
+exit code: 0
+
+GET /projects/api/v1/tasks/1001.json -> 200
+
+POST /tasks/1001/comments.json -> 201
+  comment:
+    body: "PR [**Handle null in C:\temp**](https://github.com/acme/webapp/pull/42) opened by **octocat**"
+    content-type: "text"
+    isprivate: false
+    notify: true
+
+PUT /tasks/1001/tags.json -> 200
+  tags:
+    content: "PR Open"
+
+GET /projects/api/v3/workflows.json?projectIds=100&include=stages -> 200
+
+PATCH /projects/api/v3/tasks/1001/workflows/7.json -> 204
+  positionAfterTask: -1
+  stageId: 72

@@ -1,0 +1,10 @@
+exit code: 0
+
+GET /projects/api/v1/tasks/1001.json -> 200
+
+POST /tasks/1001/comments.json -> 201
+  comment:
+    body: "Review dismissed by octocat"
+    content-type: "text"
+    isprivate: false
+    notify: true

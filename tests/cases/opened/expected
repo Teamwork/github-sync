@@ -1,0 +1,17 @@
+exit code: 0
+
+GET /projects/api/v1/tasks/1001.json -> 200
+
+POST /tasks/1001/comments.json -> 400
+  invalid JSON: Invalid control character at: line 1 column 25 (char 24)
+  "{ \"comment\": { \"body\": \"\n**octocat** opened a PR: **Add OAuth login**\n[https://github.com/acme/webapp/pull/42](https://github.com/acme/webapp/pull/42)\n`main` \u2b05\ufe0f `feature/oauth`\n\n---\n\n#### Summary\r\nAdds OAuth login for http://teamwork:8080/app/tasks/1001\r\n\r\n```sh\r\n#### configure the client secret\r\nexport CONFIG_DIR=C:\\Users\\dev\\config\r\n```\n\n---\n\n\ud83d\udd22 3 commits / \ud83d\udcdd 5 files updated / \u2795 120 additions / \u2796 8 deletions\n\n\", \"notify\": true, \"content-type\": \"text\", \"isprivate\": false } }"
+
+PUT /tasks/1001/tags.json -> 200
+  tags:
+    content: "PR Open"
+
+GET /projects/api/v3/workflows.json?projectIds=100&include=stages -> 200
+
+PATCH /projects/api/v3/tasks/1001/workflows/7.json -> 204
+  positionAfterTask: -1
+  stageId: 72
