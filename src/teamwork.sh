@@ -6,7 +6,9 @@ teamwork::get_task_id_from_body() {
 
   pat='tasks\/([0-9]{1,})'
   while [[ $body =~ $pat ]]; do
-    task_ids+=( "${BASH_REMATCH[1]}" )
+    if ! utils::in_array "${BASH_REMATCH[1]}" "${task_ids[*]}"; then
+      task_ids+=( "${BASH_REMATCH[1]}" )
+    fi
     body=${body#*"${BASH_REMATCH[0]}"}
   done
 

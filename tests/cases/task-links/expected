@@ -9,27 +9,9 @@ POST /tasks/1001/comments.json -> 201
     isprivate: false
     notify: true
 
-GET /projects/api/v1/tasks/1001.json -> 200
-
-POST /tasks/1001/comments.json -> 201
-  comment:
-    body: "PR [**\"Add OAuth login\"**](https://github.com/acme/webapp/pull/42) opened by **octocat**"
-    content-type: "text"
-    isprivate: false
-    notify: true
-
 GET /projects/api/v1/tasks/1002.json -> 200
 
 POST /tasks/1002/comments.json -> 201
-  comment:
-    body: "PR [**\"Add OAuth login\"**](https://github.com/acme/webapp/pull/42) opened by **octocat**"
-    content-type: "text"
-    isprivate: false
-    notify: true
-
-GET /projects/api/v1/tasks/1001.json -> 200
-
-POST /tasks/1001/comments.json -> 201
   comment:
     body: "PR [**\"Add OAuth login\"**](https://github.com/acme/webapp/pull/42) opened by **octocat**"
     content-type: "text"
@@ -48,15 +30,6 @@ POST /tasks/5/comments.json -> 404
 GET /projects/api/v1/tasks/2024.json -> 404
 
 POST /tasks/2024/comments.json -> 404
-  comment:
-    body: "PR [**\"Add OAuth login\"**](https://github.com/acme/webapp/pull/42) opened by **octocat**"
-    content-type: "text"
-    isprivate: false
-    notify: true
-
-GET /projects/api/v1/tasks/1003.json -> 200
-
-POST /tasks/1003/comments.json -> 500
   comment:
     body: "PR [**\"Add OAuth login\"**](https://github.com/acme/webapp/pull/42) opened by **octocat**"
     content-type: "text"
