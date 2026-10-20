@@ -48,10 +48,13 @@ inputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  # Secrets stay out of args, which show up in the runner's process list. The
+  # Teamwork token is read from its INPUT_TEAMWORK_API_TOKEN env var instead,
+  # and the empty slots keep the other args in place.
   args:
-    - ${{ inputs.GITHUB_TOKEN }}
+    - ''
     - ${{ inputs.TEAMWORK_URI }}
-    - ${{ inputs.TEAMWORK_API_TOKEN }}
+    - ''
     - ${{ inputs.AUTOMATIC_TAGGING }}
     - ${{ inputs.WORKFLOW_STAGE_OPENED }}
     - ${{ inputs.WORKFLOW_STAGE_MERGED }}

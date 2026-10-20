@@ -14,9 +14,11 @@ main() {
   ensure::env_variable_exist "GITHUB_EVENT_PATH"
   ensure::env_variable_exist "GITHUB_EVENT_NAME"
 
-  # $1 used to be GITHUB_TOKEN, which was never needed.
+  # $1 used to be GITHUB_TOKEN, which was never needed. The Teamwork token comes
+  # from the env var GitHub creates for the input, so it isn't on the command
+  # line; $3 is the fallback for running the image by hand.
   export TEAMWORK_URI="$2"
-  export TEAMWORK_API_TOKEN="$3"
+  export TEAMWORK_API_TOKEN="${INPUT_TEAMWORK_API_TOKEN:-$3}"
   export AUTOMATIC_TAGGING="$4"
   export WORKFLOW_STAGE_OPENED="$5"
   export WORKFLOW_STAGE_MERGED="$6"
