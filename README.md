@@ -23,8 +23,6 @@ Create the next environment vars in your repository:
 
 **Please Note:** The Teamwork account associated with this API key is the account which these comments will be created under. If this user does not have permission to access a task's project, that task will be skipped and the workflow run will be marked as failed.
 
-`GITHUB_TOKEN` doesn't need to be setup in the repository, this var is always available during the workflows execution.
-
 ### Installation
 Create a new file `/.github/workflows/teamwork.yml` with the following:
 
@@ -44,7 +42,6 @@ jobs:
     steps:
       - uses: teamwork/github-sync@master
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TEAMWORK_URI: ${{ secrets.TEAMWORK_URI }}
           TEAMWORK_API_TOKEN: ${{ secrets.TEAMWORK_API_TOKEN }}
           AUTOMATIC_TAGGING: false

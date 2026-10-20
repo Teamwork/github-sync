@@ -14,7 +14,7 @@ main() {
   ensure::env_variable_exist "GITHUB_EVENT_PATH"
   ensure::env_variable_exist "GITHUB_EVENT_NAME"
 
-  export GITHUB_TOKEN="$1"
+  # $1 used to be GITHUB_TOKEN, which was never needed.
   export TEAMWORK_URI="$2"
   export TEAMWORK_API_TOKEN="$3"
   export AUTOMATIC_TAGGING="$4"
