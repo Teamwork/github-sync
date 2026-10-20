@@ -61,7 +61,7 @@ main() {
     if utils::in_array "$project_id" "${ignored_project_ids[*]}"
     then
         log::message "ignored due to IGNORE_PROJECT_IDS"
-        exit 0
+        continue
     fi
 
     if [ "$event" == "pull_request" ] && [ "$action" == "opened" ]; then
