@@ -4,7 +4,7 @@ GET /projects/api/v1/tasks/1001.json -> 200
 
 POST /tasks/1001/comments.json -> 201
   comment:
-    body: "PR [**Add OAuth login**](https://github.com/acme/webapp/pull/42) closed without merging by **octocat**"
+    body: "PR [**\"Add OAuth login\"**](https://github.com/acme/webapp/pull/42) closed without merging by **octocat**"
     content-type: "text"
     isprivate: false
     notify: true

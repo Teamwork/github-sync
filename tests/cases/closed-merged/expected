@@ -2,9 +2,16 @@ exit code: 0
 
 GET /projects/api/v1/tasks/1001.json -> 200
 
-POST /tasks/1001/comments.json -> 400
-  invalid JSON: Invalid control character at: line 1 column 25 (char 24)
-  "{ \"comment\": { \"body\": \"\n**octocat** merged a PR: **Add OAuth login**\n[https://github.com/acme/webapp/pull/42](https://github.com/acme/webapp/pull/42)\n\", \"notify\": true, \"content-type\": \"text\", \"isprivate\": false } }"
+POST /tasks/1001/comments.json -> 201
+  comment:
+    body:
+      |
+      | **octocat** merged a PR: **Add OAuth login**
+      | [https://github.com/acme/webapp/pull/42](https://github.com/acme/webapp/pull/42)
+      |
+    content-type: "text"
+    isprivate: false
+    notify: true
 
 PUT /tasks/1001/tags.json -> 200
   tags:

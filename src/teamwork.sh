@@ -101,12 +101,15 @@ teamwork::add_comment() {
   local -r body=$1
 
   if [ "$ENV" == "test" ]; then
-    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Comment: ${body//\"/}"
+    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Comment: $body"
     return
   fi
 
-  response=$(teamwork::request POST "/tasks/$TEAMWORK_TASK_ID/comments.json" \
-      "{ \"comment\": { \"body\": \"${body//\"/}\", \"notify\": true, \"content-type\": \"text\", \"isprivate\": false } }")
+  # jq escapes the body (quotes, backslashes, newlines...) into valid JSON
+  local -r payload=$(jq -n --arg body "$body" \
+    '{ comment: { body: $body, notify: true, "content-type": "text", isprivate: false } }')
+
+  response=$(teamwork::request POST "/tasks/$TEAMWORK_TASK_ID/comments.json" "$payload")
 
   log::message "$response"
 }
