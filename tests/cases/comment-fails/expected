@@ -1,4 +1,9 @@
-exit code: 0
+exit code: 1
+
+stderr:
+  curl: (22) The requested URL returned error: 500
+  Failed to add a comment to task 1003: {"MESSAGE": "Internal server error"}
+  1 Teamwork request(s) failed, see the errors above
 
 GET /projects/api/v1/tasks/1003.json -> 200
 

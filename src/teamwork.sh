@@ -18,18 +18,26 @@ teamwork::get_task_id_from_body() {
   echo "$task_ids_str"
 }
 
-# Calls the Teamwork API and prints the response body.
+# Calls the Teamwork API and prints the response body. Fails on network errors,
+# timeouts and HTTP error statuses, printing the error body in the latter case.
 teamwork::request() {
   local -r method=$1
   local -r path=$2
   local -r payload=${3:-}
 
-  local args=(-sS -X "$method" -u "$TEAMWORK_API_TOKEN"':')
+  local args=(-sS --fail-with-body --max-time 30 -X "$method" -u "$TEAMWORK_API_TOKEN"':')
   if [ -n "$payload" ]; then
     args+=(-H 'Content-Type: application/json; charset=utf-8' -d "$payload")
   fi
 
   curl "${args[@]}" "$TEAMWORK_URI$path"
+}
+
+# Logs a failed request and records it, so the run fails once every task has
+# been processed.
+teamwork::request_failed() {
+  log::error "$1"
+  TEAMWORK_FAILED_REQUESTS=$((TEAMWORK_FAILED_REQUESTS + 1))
 }
 
 teamwork::get_project_id_from_task() {
@@ -40,17 +48,15 @@ teamwork::get_project_id_from_task() {
     return
   fi
 
-  response=$(
-    teamwork::request GET "/projects/api/v1/tasks/$task_id.json" |\
-      jq -r '.["todo-item"]["project-id"]'
-  )
-  echo "$response"
+  teamwork::request GET "/projects/api/v1/tasks/$task_id.json" |\
+    jq -r '.["todo-item"]["project-id"]'
 }
 
 # Resolves a workflow stage name to its "<workflowId> <stageId>" pair within the
 # task's project. Matching is a case-sensitive substring match against the stage
 # name (mirroring the legacy board-column behaviour), and the first match wins.
-# Echoes nothing when no stage name is provided or no stage matches.
+# Echoes nothing when no stage name is provided or no stage matches, and fails
+# when the stages can't be fetched.
 teamwork::get_workflow_stage() {
   local -r stage_name=$1
 
@@ -79,7 +85,11 @@ teamwork::move_task_to_stage() {
     return
   fi
 
-  local -r stage=$(teamwork::get_workflow_stage "$stage_name")
+  local stage
+  if ! stage=$(teamwork::get_workflow_stage "$stage_name"); then
+    teamwork::request_failed "Failed to fetch the workflow stages of project $TEAMWORK_PROJECT_ID"
+    return
+  fi
   if [ -z "$stage" ]; then
     log::message "Failed to find a matching workflow stage for '$stage_name'"
     return
@@ -93,8 +103,11 @@ teamwork::move_task_to_stage() {
     return
   fi
 
-  response=$(teamwork::request PATCH "/projects/api/v3/tasks/$TEAMWORK_TASK_ID/workflows/$workflow_id.json" \
-      "{ \"stageId\": $stage_id, \"positionAfterTask\": -1 }")
+  if ! response=$(teamwork::request PATCH "/projects/api/v3/tasks/$TEAMWORK_TASK_ID/workflows/$workflow_id.json" \
+      "{ \"stageId\": $stage_id, \"positionAfterTask\": -1 }"); then
+    teamwork::request_failed "Failed to move task $TEAMWORK_TASK_ID to the '$stage_name' workflow stage: $response"
+    return
+  fi
 
   log::message "$response"
 }
@@ -111,7 +124,10 @@ teamwork::add_comment() {
   local -r payload=$(jq -n --arg body "$body" \
     '{ comment: { body: $body, notify: true, "content-type": "text", isprivate: false } }')
 
-  response=$(teamwork::request POST "/tasks/$TEAMWORK_TASK_ID/comments.json" "$payload")
+  if ! response=$(teamwork::request POST "/tasks/$TEAMWORK_TASK_ID/comments.json" "$payload"); then
+    teamwork::request_failed "Failed to add a comment to task $TEAMWORK_TASK_ID: $response"
+    return
+  fi
 
   log::message "$response"
 }
@@ -125,8 +141,11 @@ teamwork::add_tag() {
   fi
 
   if [ "$AUTOMATIC_TAGGING" == true ]; then
-    response=$(teamwork::request PUT "/tasks/$TEAMWORK_TASK_ID/tags.json" \
-        "{ \"tags\": { \"content\": \"${tag_name//\"/}\" } }")
+    if ! response=$(teamwork::request PUT "/tasks/$TEAMWORK_TASK_ID/tags.json" \
+        "{ \"tags\": { \"content\": \"${tag_name//\"/}\" } }"); then
+      teamwork::request_failed "Failed to add the '$tag_name' tag to task $TEAMWORK_TASK_ID: $response"
+      return
+    fi
 
     log::message "$response"
   fi
@@ -141,8 +160,11 @@ teamwork::remove_tag() {
   fi
 
   if [ "$AUTOMATIC_TAGGING" == true ]; then
-    response=$(teamwork::request PUT "/tasks/$TEAMWORK_TASK_ID/tags.json" \
-        "{ \"tags\": { \"content\": \"${tag_name//\"/}\" },\"removeProvidedTags\":\"true\" }")
+    if ! response=$(teamwork::request PUT "/tasks/$TEAMWORK_TASK_ID/tags.json" \
+        "{ \"tags\": { \"content\": \"${tag_name//\"/}\" },\"removeProvidedTags\":\"true\" }"); then
+      teamwork::request_failed "Failed to remove the '$tag_name' tag from task $TEAMWORK_TASK_ID: $response"
+      return
+    fi
 
     log::message "$response"
   fi

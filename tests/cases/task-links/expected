@@ -1,4 +1,13 @@
-exit code: 0
+exit code: 1
+
+stderr:
+  curl: (22) The requested URL returned error: 404
+  Failed to get the project of task 5, check the task exists and the API token's user can access it
+  curl: (22) The requested URL returned error: 404
+  Failed to get the project of task 2024, check the task exists and the API token's user can access it
+  curl: (22) The requested URL returned error: 500
+  Failed to add a comment to task 1003: {"MESSAGE": "Internal server error"}
+  3 Teamwork request(s) failed, see the errors above
 
 GET /projects/api/v1/tasks/1001.json -> 200
 
@@ -20,21 +29,7 @@ POST /tasks/1002/comments.json -> 201
 
 GET /projects/api/v1/tasks/5.json -> 404
 
-POST /tasks/5/comments.json -> 404
-  comment:
-    body: "PR [**\"Add OAuth login\"**](https://github.com/acme/webapp/pull/42) opened by **octocat**"
-    content-type: "text"
-    isprivate: false
-    notify: true
-
 GET /projects/api/v1/tasks/2024.json -> 404
-
-POST /tasks/2024/comments.json -> 404
-  comment:
-    body: "PR [**\"Add OAuth login\"**](https://github.com/acme/webapp/pull/42) opened by **octocat**"
-    content-type: "text"
-    isprivate: false
-    notify: true
 
 GET /projects/api/v1/tasks/1003.json -> 200
 

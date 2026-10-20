@@ -21,7 +21,7 @@ Create the next environment vars in your repository:
 * `TEAMWORK_URI`: The URL of your installation (e.g.: https://yourcompany.teamwork.com)
 * `TEAMWORK_API_TOKEN`: The API token to authenticate the workflow. Follow [this guide](https://support.teamwork.com/projects/using-teamwork/locating-your-api-key) to find your URL and API key.
 
-**Please Note:** The Teamwork account associated with this API key is the account which these comments will be created under. If this user does not have permission to access the project, this action will be ignored.
+**Please Note:** The Teamwork account associated with this API key is the account which these comments will be created under. If this user does not have permission to access a task's project, that task will be skipped and the workflow run will be marked as failed.
 
 `GITHUB_TOKEN` doesn't need to be setup in the repository, this var is always available during the workflows execution.
 
@@ -59,7 +59,7 @@ jobs:
 ## Usage
 When creating a new PR, write in the description of the PR the URL of the task. The action will automatically add a comment in the task. Optionally, you may choose for a lightweight comment that will only include the PR title, URL and the user that performed the action, to enable this option set the `LIGHTWEIGHT_COMMENT` input to `true`.
 
-Please note, the comment will be created in Teamwork under the account you have attached to this action. If the API key of the user you are using does not have permissions to access certain projects, the comment will not be created.
+Please note, the comment will be created in Teamwork under the account you have attached to this action. If the API key of the user you are using does not have permissions to access certain projects, the comment will not be created and the workflow run will report an error.
 
 ![GitHub pr comment](./.github/assets/github_pr_comment.png)
 

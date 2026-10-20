@@ -67,13 +67,18 @@ main() {
     exit 0
   fi
 
+  TEAMWORK_FAILED_REQUESTS=0
+
   local project_id
   IFS=',' read -r -a task_ids <<< "$task_ids_str"
   for task_id in "${task_ids[@]}"; do
     log::message "Task found with the id: $task_id"
 
     export TEAMWORK_TASK_ID=$task_id
-    project_id="$(teamwork::get_project_id_from_task "$task_id")"
+    if ! project_id="$(teamwork::get_project_id_from_task "$task_id")" || [[ ! $project_id =~ ^[0-9]+$ ]]; then
+      teamwork::request_failed "Failed to get the project of task $task_id, check the task exists and the API token's user can access it"
+      continue
+    fi
     export TEAMWORK_PROJECT_ID=$project_id
 
     ignored_project_ids=("${IGNORE_PROJECT_IDS:-}")
@@ -86,5 +91,10 @@ main() {
     "$handler"
   done
 
-  exit $?
+  if ((TEAMWORK_FAILED_REQUESTS > 0)); then
+    log::error "$TEAMWORK_FAILED_REQUESTS Teamwork request(s) failed, see the errors above"
+    exit 1
+  fi
+
+  exit 0
 }

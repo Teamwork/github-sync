@@ -1,13 +1,11 @@
-exit code: 0
+exit code: 1
+
+stderr:
+  curl: (22) The requested URL returned error: 404
+  Failed to get the project of task 9999, check the task exists and the API token's user can access it
+  1 Teamwork request(s) failed, see the errors above
 
 GET /projects/api/v1/tasks/9999.json -> 404
-
-POST /tasks/9999/comments.json -> 404
-  comment:
-    body: "PR [**\"Add OAuth login\"**](https://github.com/acme/webapp/pull/42) opened by **octocat**"
-    content-type: "text"
-    isprivate: false
-    notify: true
 
 GET /projects/api/v1/tasks/1001.json -> 200
 
