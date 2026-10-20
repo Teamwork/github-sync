@@ -53,7 +53,7 @@ github::get_review_state() {
 }
 
 github::get_review_comment() {
-  jq --raw-output .review.body "$GITHUB_EVENT_PATH"
+  jq --raw-output '.review.body // empty' "$GITHUB_EVENT_PATH"
 }
 
 github::print_all_data() {
