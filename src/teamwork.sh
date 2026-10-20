@@ -12,9 +12,6 @@ teamwork::get_task_id_from_body() {
   host=${host#*://}
   host=${host%%[/?#]*}
   host=${host//./[.]}
-  if [ "$ENV" == "test" ]; then
-    host='[a-z0-9.-]+' # test events link to placeholder sites
-  fi
 
   local -r pat="(^|[^a-z0-9.-])${host}(/[^][()<>[:space:]]*)?[/#]tasks/([0-9]+)"
   while [[ $body =~ $pat ]]; do
@@ -55,11 +52,6 @@ teamwork::request_failed() {
 teamwork::get_project_id_from_task() {
   local -r task_id=$1
 
-  if [ "$ENV" == "test" ]; then
-    echo "$task_id"
-    return
-  fi
-
   teamwork::request GET "/projects/api/v1/tasks/$task_id.json" |\
     jq -r '.["todo-item"]["project-id"]'
 }
@@ -73,11 +65,6 @@ teamwork::get_workflow_stage() {
   local -r stage_name=$1
 
   if [ -z "$stage_name" ]; then
-    return
-  fi
-
-  if [ "$ENV" == "test" ]; then
-    echo "$TEAMWORK_PROJECT_ID $TEAMWORK_PROJECT_ID"
     return
   fi
 
@@ -110,11 +97,6 @@ teamwork::move_task_to_stage() {
   local workflow_id stage_id
   read -r workflow_id stage_id <<< "$stage"
 
-  if [ "$ENV" == "test" ]; then
-    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Project ID: $TEAMWORK_PROJECT_ID - Workflow ID: $workflow_id - Stage ID: $stage_id"
-    return
-  fi
-
   if ! response=$(teamwork::request PATCH "/projects/api/v3/tasks/$TEAMWORK_TASK_ID/workflows/$workflow_id.json" \
       "{ \"stageId\": $stage_id, \"positionAfterTask\": -1 }"); then
     teamwork::request_failed "Failed to move task $TEAMWORK_TASK_ID to the '$stage_name' workflow stage: $response"
@@ -126,11 +108,6 @@ teamwork::move_task_to_stage() {
 
 teamwork::add_comment() {
   local -r body=$1
-
-  if [ "$ENV" == "test" ]; then
-    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Comment: $body"
-    return
-  fi
 
   # jq escapes the body (quotes, backslashes, newlines...) into valid JSON
   local -r payload=$(jq -n --arg body "$body" \
@@ -147,11 +124,6 @@ teamwork::add_comment() {
 teamwork::add_tag() {
   local -r tag_name=$1
 
-  if [ "$ENV" == "test" ]; then
-    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Tag Added: ${tag_name//\"/}"
-    return
-  fi
-
   if [ "$AUTOMATIC_TAGGING" == true ]; then
     if ! response=$(teamwork::request PUT "/tasks/$TEAMWORK_TASK_ID/tags.json" \
         "{ \"tags\": { \"content\": \"${tag_name//\"/}\" } }"); then
@@ -165,11 +137,6 @@ teamwork::add_tag() {
 
 teamwork::remove_tag() {
   local -r tag_name=$1
-
-  if [ "$ENV" == "test" ]; then
-    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Tag Removed: ${tag_name//\"/}"
-    return
-  fi
 
   if [ "$AUTOMATIC_TAGGING" == true ]; then
     if ! response=$(teamwork::request PUT "/tasks/$TEAMWORK_TASK_ID/tags.json" \

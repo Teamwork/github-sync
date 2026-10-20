@@ -35,8 +35,6 @@ main() {
   : "${WORKFLOW_STAGE_MERGED:=$BOARD_COLUMN_MERGED}"
   : "${WORKFLOW_STAGE_CLOSED:=$BOARD_COLUMN_CLOSED}"
 
-  env::set_environment
-
   # Check if there is a task link in the PR
   local -r pr_body=$(github::get_pr_body)
   local -r task_ids_str=$(teamwork::get_task_id_from_body "$pr_body" )
@@ -62,8 +60,6 @@ main() {
     handler=teamwork::pull_request_review_submitted
   elif [ "$event" == "pull_request_review" ] && [ "$action" == "dismissed" ]; then
     handler=teamwork::pull_request_review_dismissed
-  elif [ "$ENV" == "test" ]; then # always run pull_request_opened at the very least when in test
-    handler=teamwork::pull_request_opened
   else
     log::message "Operation not allowed"
     exit 0

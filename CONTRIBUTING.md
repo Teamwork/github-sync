@@ -1,11 +1,8 @@
 # Contributing
 
-## Getting started
-
 ## Setup local environment
 
 * [Install Docker](https://docs.docker.com/get-docker/)
-* [Install act tool](https://github.com/nektos/act)
 
 ## Running the tests
 
@@ -24,29 +21,3 @@ Each directory in `tests/cases` is a test case:
 `./tests/run.sh <filter>` only runs the cases whose name contains the filter.
 
 To add a case, create its `event.json` and `inputs`, run `./tests/run.sh --update <case name>` to record its `expected` file, and check that file is right before committing it. The mock's data (which tasks exist, their projects and the workflow stages) is at the top of `tests/mock-teamwork.py`.
-
-## Usage
-
-Simulate a new pull request
-
-```
-act pull_request -e tests/events/pull_request_opened.json
-```
-
-Simulate a pull request has been approved
-
-```
-act pull_request_review -e tests/events/pull_request_approved.json
-```
-
-Simulate a pull request has been merged
-
-```
-act pull_request -e tests/events/pull_request_merged.json
-```
-
-Simulate a pull request has been closed without merging
-
-```
-act pull_request -e tests/events/pull_request_closed.json
-```
