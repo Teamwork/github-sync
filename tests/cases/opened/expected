@@ -16,7 +16,7 @@ POST /tasks/1001/comments.json -> 201
       | Adds OAuth login for http://teamwork:8080/app/tasks/1001␍
       | ␍
       | ```sh␍
-      | #### configure the "client" secret␍
+      | # configure the "client" secret␍
       | export CONFIG_DIR=C:\Users\dev\config␍
       | ```
       |

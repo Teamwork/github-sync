@@ -13,7 +13,8 @@ github::get_pr_number() {
 }
 
 github::get_pr_body() {
-  jq --raw-output .pull_request.body "$GITHUB_EVENT_PATH" | sed -r 's/^#{1,3}\ /#### /g'
+  jq --raw-output .pull_request.body "$GITHUB_EVENT_PATH" |\
+    awk '/^[[:space:]]*(```|~~~)/ { fenced = !fenced } !fenced { sub(/^#{1,3} /, "#### ") } { print }'
 }
 
 github::get_head_ref() {
