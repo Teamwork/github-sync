@@ -33,7 +33,7 @@ github::get_pr_url() {
 }
 
 github::get_pr_title() {
-  jq --raw-output .pull_request.title "$GITHUB_EVENT_PATH"
+  jq --raw-output '.pull_request.title | trim' "$GITHUB_EVENT_PATH"
 }
 
 github::get_pr_patch_stats() {
@@ -53,7 +53,7 @@ github::get_review_state() {
 }
 
 github::get_review_comment() {
-  jq --raw-output .review.body "$GITHUB_EVENT_PATH"
+  jq --raw-output '.review.body // empty' "$GITHUB_EVENT_PATH"
 }
 
 github::print_all_data() {
