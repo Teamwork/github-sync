@@ -1,13 +1,25 @@
 #!/usr/bin/env bash
 
+# Extracts the ids of the tasks linked in the PR body, without duplicates. Only
+# links to the Teamwork site in TEAMWORK_URI count, e.g.
+# https://acme.teamwork.com/app/tasks/123 or https://acme.teamwork.com/#/tasks/123
 teamwork::get_task_id_from_body() {
-  local body=$1
+  # Hostnames are case-insensitive, so both the body and the host are lowercased
+  local body=${1,,}
   local task_ids=()
 
-  pat='tasks\/([0-9]{1,})'
+  local host=${TEAMWORK_URI,,}
+  host=${host#*://}
+  host=${host%%[/?#]*}
+  host=${host//./[.]}
+  if [ "$ENV" == "test" ]; then
+    host='[a-z0-9.-]+' # test events link to placeholder sites
+  fi
+
+  local -r pat="(^|[^a-z0-9.-])${host}(/[^][()<>[:space:]]*)?[/#]tasks/([0-9]+)"
   while [[ $body =~ $pat ]]; do
-    if ! utils::in_array "${BASH_REMATCH[1]}" "${task_ids[*]}"; then
-      task_ids+=( "${BASH_REMATCH[1]}" )
+    if ! utils::in_array "${BASH_REMATCH[3]}" "${task_ids[*]}"; then
+      task_ids+=( "${BASH_REMATCH[3]}" )
     fi
     body=${body#*"${BASH_REMATCH[0]}"}
   done

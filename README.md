@@ -57,7 +57,7 @@ jobs:
 ```
 
 ## Usage
-When creating a new PR, write in the description of the PR the URL of the task. The action will automatically add a comment in the task. Optionally, you may choose for a lightweight comment that will only include the PR title, URL and the user that performed the action, to enable this option set the `LIGHTWEIGHT_COMMENT` input to `true`.
+When creating a new PR, write in the description of the PR the URL of the task (it must point to the same Teamwork site as `TEAMWORK_URI`, e.g. `https://yourcompany.teamwork.com/app/tasks/123`). The action will automatically add a comment in the task. Optionally, you may choose for a lightweight comment that will only include the PR title, URL and the user that performed the action, to enable this option set the `LIGHTWEIGHT_COMMENT` input to `true`.
 
 Please note, the comment will be created in Teamwork under the account you have attached to this action. If the API key of the user you are using does not have permissions to access certain projects, the comment will not be created and the workflow run will report an error.
 
