@@ -49,6 +49,24 @@ main() {
 
   log::message "Event: $event - Action: $action"
 
+  # Pick the handler before touching the API, so unsupported events make no
+  # requests at all
+  local handler
+  if [ "$event" == "pull_request" ] && [ "$action" == "opened" ]; then
+    handler=teamwork::pull_request_opened
+  elif [ "$event" == "pull_request" ] && [ "$action" == "closed" ]; then
+    handler=teamwork::pull_request_closed
+  elif [ "$event" == "pull_request_review" ] && [ "$action" == "submitted" ]; then
+    handler=teamwork::pull_request_review_submitted
+  elif [ "$event" == "pull_request_review" ] && [ "$action" == "dismissed" ]; then
+    handler=teamwork::pull_request_review_dismissed
+  elif [ "$ENV" == "test" ]; then # always run pull_request_opened at the very least when in test
+    handler=teamwork::pull_request_opened
+  else
+    log::message "Operation not allowed"
+    exit 0
+  fi
+
   local project_id
   IFS=',' read -r -a task_ids <<< "$task_ids_str"
   for task_id in "${task_ids[@]}"; do
@@ -65,20 +83,7 @@ main() {
         continue
     fi
 
-    if [ "$event" == "pull_request" ] && [ "$action" == "opened" ]; then
-      teamwork::pull_request_opened
-    elif [ "$event" == "pull_request" ] && [ "$action" == "closed" ]; then
-      teamwork::pull_request_closed
-    elif [ "$event" == "pull_request_review" ] && [ "$action" == "submitted" ]; then
-      teamwork::pull_request_review_submitted
-    elif [ "$event" == "pull_request_review" ] && [ "$action" == "dismissed" ]; then
-      teamwork::pull_request_review_dismissed
-    elif [ "$ENV" == "test" ]; then # always run pull_request_opened at the very least when in test
-      teamwork::pull_request_opened
-    else
-      log::message "Operation not allowed"
-      exit 0
-    fi
+    "$handler"
   done
 
   exit $?
