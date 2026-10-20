@@ -16,6 +16,20 @@ teamwork::get_task_id_from_body() {
   echo "$task_ids_str"
 }
 
+# Calls the Teamwork API and prints the response body.
+teamwork::request() {
+  local -r method=$1
+  local -r path=$2
+  local -r payload=${3:-}
+
+  local args=(-sS -X "$method" -u "$TEAMWORK_API_TOKEN"':')
+  if [ -n "$payload" ]; then
+    args+=(-H 'Content-Type: application/json; charset=utf-8' -d "$payload")
+  fi
+
+  curl "${args[@]}" "$TEAMWORK_URI$path"
+}
+
 teamwork::get_project_id_from_task() {
   local -r task_id=$1
 
@@ -25,7 +39,7 @@ teamwork::get_project_id_from_task() {
   fi
 
   response=$(
-    curl "$TEAMWORK_URI/projects/api/v1/tasks/$task_id.json" -u "$TEAMWORK_API_TOKEN"':' |\
+    teamwork::request GET "/projects/api/v1/tasks/$task_id.json" |\
       jq -r '.["todo-item"]["project-id"]'
   )
   echo "$response"
@@ -50,8 +64,7 @@ teamwork::get_workflow_stage() {
   # A single call scoped to the project sideloads every stage across the
   # project's workflow(s); each stage carries its parent workflow id, which the
   # move endpoint also needs.
-  curl -s "$TEAMWORK_URI/projects/api/v3/workflows.json?projectIds=$TEAMWORK_PROJECT_ID&include=stages" \
-    -u "$TEAMWORK_API_TOKEN"':' |\
+  teamwork::request GET "/projects/api/v3/workflows.json?projectIds=$TEAMWORK_PROJECT_ID&include=stages" |\
     jq -r --arg stage_name "$stage_name" \
       '[.included.stages[]? | select(.name | contains($stage_name)) | "\(.workflow.id) \(.id)"][0] // empty'
 }
@@ -78,10 +91,8 @@ teamwork::move_task_to_stage() {
     return
   fi
 
-  response=$(curl -X "PATCH" "$TEAMWORK_URI/projects/api/v3/tasks/$TEAMWORK_TASK_ID/workflows/$workflow_id.json" \
-      -u "$TEAMWORK_API_TOKEN"':' \
-      -H 'Content-Type: application/json; charset=utf-8' \
-      -d "{ \"stageId\": $stage_id, \"positionAfterTask\": -1 }" )
+  response=$(teamwork::request PATCH "/projects/api/v3/tasks/$TEAMWORK_TASK_ID/workflows/$workflow_id.json" \
+      "{ \"stageId\": $stage_id, \"positionAfterTask\": -1 }")
 
   log::message "$response"
 }
@@ -94,10 +105,8 @@ teamwork::add_comment() {
     return
   fi
 
-  response=$(curl -X "POST" "$TEAMWORK_URI/tasks/$TEAMWORK_TASK_ID/comments.json" \
-       -u "$TEAMWORK_API_TOKEN"':' \
-       -H 'Content-Type: application/json; charset=utf-8' \
-       -d "{ \"comment\": { \"body\": \"${body//\"/}\", \"notify\": true, \"content-type\": \"text\", \"isprivate\": false } }" )
+  response=$(teamwork::request POST "/tasks/$TEAMWORK_TASK_ID/comments.json" \
+      "{ \"comment\": { \"body\": \"${body//\"/}\", \"notify\": true, \"content-type\": \"text\", \"isprivate\": false } }")
 
   log::message "$response"
 }
@@ -111,10 +120,8 @@ teamwork::add_tag() {
   fi
 
   if [ "$AUTOMATIC_TAGGING" == true ]; then
-    response=$(curl -X "PUT" "$TEAMWORK_URI/tasks/$TEAMWORK_TASK_ID/tags.json" \
-       -u "$TEAMWORK_API_TOKEN"':' \
-       -H 'Content-Type: application/json; charset=utf-8' \
-       -d "{ \"tags\": { \"content\": \"${tag_name//\"/}\" } }" )
+    response=$(teamwork::request PUT "/tasks/$TEAMWORK_TASK_ID/tags.json" \
+        "{ \"tags\": { \"content\": \"${tag_name//\"/}\" } }")
 
     log::message "$response"
   fi
@@ -129,10 +136,8 @@ teamwork::remove_tag() {
   fi
 
   if [ "$AUTOMATIC_TAGGING" == true ]; then
-    response=$(curl -X "PUT" "$TEAMWORK_URI/tasks/$TEAMWORK_TASK_ID/tags.json" \
-         -u "$TEAMWORK_API_TOKEN"':' \
-         -H 'Content-Type: application/json; charset=utf-8' \
-         -d "{ \"tags\": { \"content\": \"${tag_name//\"/}\" },\"removeProvidedTags\":\"true\" }" )
+    response=$(teamwork::request PUT "/tasks/$TEAMWORK_TASK_ID/tags.json" \
+        "{ \"tags\": { \"content\": \"${tag_name//\"/}\" },\"removeProvidedTags\":\"true\" }")
 
     log::message "$response"
   fi
