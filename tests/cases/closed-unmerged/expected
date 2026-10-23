@@ -1,0 +1,30 @@
+exit code: 0
+
+GET /projects/api/v1/tasks/1001.json -> 200
+
+POST /tasks/1001/comments.json -> 201
+  comment:
+    body:
+      |
+      | **octocat** closed a PR without merging: **Add OAuth login**
+      | [https://github.com/acme/webapp/pull/42](https://github.com/acme/webapp/pull/42)
+      |
+    content-type: "text"
+    isprivate: false
+    notify: true
+
+PUT /tasks/1001/tags.json -> 200
+  removeProvidedTags: "true"
+  tags:
+    content: "PR Open"
+
+PUT /tasks/1001/tags.json -> 200
+  removeProvidedTags: "true"
+  tags:
+    content: "PR Approved"
+
+GET /projects/api/v3/workflows.json?projectIds=100&include=stages -> 200
+
+PATCH /projects/api/v3/tasks/1001/workflows/7.json -> 204
+  positionAfterTask: -1
+  stageId: 74

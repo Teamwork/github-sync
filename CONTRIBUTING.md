@@ -1,34 +1,23 @@
 # Contributing
 
-## Getting started
-
 ## Setup local environment
 
 * [Install Docker](https://docs.docker.com/get-docker/)
-* [Install act tool](https://github.com/nektos/act)
 
-## Usage
+## Running the tests
 
-Simulate a new pull request
-
-```
-act pull_request -e tests/events/pull_request_opened.json
-```
-
-Simulate a pull request has been approved
+The tests run the action's Docker image against a mock Teamwork API (`tests/mock-teamwork.py`) and check what it sends:
 
 ```
-act pull_request_review -e tests/events/pull_request_approved.json
+./tests/run.sh
 ```
 
-Simulate a pull request has been merged
+Each directory in `tests/cases` is a test case:
 
-```
-act pull_request -e tests/events/pull_request_merged.json
-```
+* `event.json`: the GitHub event the action receives
+* `inputs`: the action's inputs as the `INPUT_*` environment variables GitHub creates for them, plus `GITHUB_EVENT_NAME` and any other environment variables such as `IGNORE_PROJECT_IDS`
+* `expected`: the exit code, errors and requests the mock Teamwork API should end up with
 
-Simulate a pull request has been closed without merging
+`./tests/run.sh <filter>` only runs the cases whose name contains the filter.
 
-```
-act pull_request -e tests/events/pull_request_closed.json
-```
+To add a case, create its `event.json` and `inputs`, run `./tests/run.sh --update <case name>` to record its `expected` file, and check that file is right before committing it. The mock's data (which tasks exist, their projects and the workflow stages) is at the top of `tests/mock-teamwork.py`.

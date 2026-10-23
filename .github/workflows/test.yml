@@ -1,9 +1,9 @@
 name: teamwork
 
 on:
+  push:
+    branches: [master]
   pull_request:
-  pull_request_review:
-    types: [submitted, dismissed]
 
 jobs:
   build:
@@ -11,12 +11,5 @@ jobs:
     name: Ensure this project runs
     steps:
       - uses: actions/checkout@v5
-      - uses: ./
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TEAMWORK_URI: "localhost"
-          TEAMWORK_API_TOKEN: "test_api_token"
-          AUTOMATIC_TAGGING: true
-          WORKFLOW_STAGE_OPENED: "PR Open"
-          WORKFLOW_STAGE_MERGED: "Ready to Test"
-          WORKFLOW_STAGE_CLOSED: "Rejected"
+      - name: Run the tests against a mock Teamwork API
+        run: ./tests/run.sh

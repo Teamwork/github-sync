@@ -8,12 +8,9 @@ github::get_action() {
   jq --raw-output .action "$GITHUB_EVENT_PATH"
 }
 
-github::get_pr_number() {
-  jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH"
-}
-
 github::get_pr_body() {
-  jq --raw-output .pull_request.body "$GITHUB_EVENT_PATH" | sed -r 's/^#{1,3}\ /#### /g'
+  jq --raw-output .pull_request.body "$GITHUB_EVENT_PATH" |\
+    awk '/^[[:space:]]*(```|~~~)/ { fenced = !fenced } !fenced { sub(/^#{1,3} /, "#### ") } { print }'
 }
 
 github::get_head_ref() {
@@ -22,10 +19,6 @@ github::get_head_ref() {
 
 github::get_base_ref() {
   jq --raw-output .pull_request.base.ref "$GITHUB_EVENT_PATH"
-}
-
-github::get_repository_full_name() {
-  jq --raw-output .pull_request.head.repo.full_name "$GITHUB_EVENT_PATH"
 }
 
 github::get_pr_url() {
@@ -54,8 +47,4 @@ github::get_review_state() {
 
 github::get_review_comment() {
   jq --raw-output '.review.body // empty' "$GITHUB_EVENT_PATH"
-}
-
-github::print_all_data() {
-  cat "$GITHUB_EVENT_PATH"
 }

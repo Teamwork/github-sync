@@ -1,0 +1,27 @@
+{
+  "action": "opened",
+  "number": 42,
+  "pull_request": {
+    "number": 42,
+    "title": "Add OAuth login",
+    "body": "Linked twice: [http://teamwork:8080/app/tasks/1001](http://teamwork:8080/app/tasks/1001)\nUpper case, old route: HTTP://TEAMWORK:8080/#/tasks/1002\nAgain: http://teamwork:8080/#tasks/1001\nNot task links: subtasks/5, https://github.com/acme/webapp/blob/main/scripts/tasks/2024_cleanup.py\nAnother Teamwork site: https://acme.teamwork.com/app/tasks/1003\nLook-alike host: http://evil-teamwork:8080/app/tasks/1003",
+    "html_url": "https://github.com/acme/webapp/pull/42",
+    "head": {
+      "ref": "feature/oauth",
+      "repo": {
+        "full_name": "acme/webapp"
+      }
+    },
+    "base": {
+      "ref": "main"
+    },
+    "commits": 3,
+    "changed_files": 5,
+    "additions": 120,
+    "deletions": 8,
+    "merged": false
+  },
+  "sender": {
+    "login": "octocat"
+  }
+}

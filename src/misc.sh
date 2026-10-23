@@ -9,14 +9,6 @@ log::message() {
   echo "$@"
 }
 
-env::set_environment() {
-  if [ "$TEAMWORK_URI" == "localhost" ] && [ "$TEAMWORK_API_TOKEN" == "test_api_token" ]; then
-    export ENV="test"
-  else
-    export ENV="prod"
-  fi
-}
-
 utils::in_array() {
   ARRAY=$2
   for e in ${ARRAY[*]}

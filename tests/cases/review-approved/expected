@@ -1,0 +1,24 @@
+exit code: 0
+
+GET /projects/api/v1/tasks/1001.json -> 200
+
+POST /tasks/1001/comments.json -> 201
+  comment:
+    body:
+      |
+      | **octocat** submitted a review to the PR: **Add OAuth login**
+      | [https://github.com/acme/webapp/pull/42](https://github.com/acme/webapp/pull/42)
+      |
+      | ---
+      |
+      | Review: **approved**
+      | Looks good!␍
+      | One nit: rename `cfg` to "config".
+      |
+    content-type: "text"
+    isprivate: false
+    notify: true
+
+PUT /tasks/1001/tags.json -> 200
+  tags:
+    content: "PR Approved"

@@ -1,12 +1,23 @@
 #!/usr/bin/env bash
 
+# Extracts the ids of the tasks linked in the PR body, without duplicates. Only
+# links to the Teamwork site in TEAMWORK_URI count, e.g.
+# https://acme.teamwork.com/app/tasks/123 or https://acme.teamwork.com/#/tasks/123
 teamwork::get_task_id_from_body() {
-  local body=$1
+  # Hostnames are case-insensitive, so both the body and the host are lowercased
+  local body=${1,,}
   local task_ids=()
 
-  pat='tasks\/([0-9]{1,})'
+  local host=${TEAMWORK_URI,,}
+  host=${host#*://}
+  host=${host%%[/?#]*}
+  host=${host//./[.]}
+
+  local -r pat="(^|[^a-z0-9.-])${host}(/[^][()<>[:space:]]*)?[/#]tasks/([0-9]+)"
   while [[ $body =~ $pat ]]; do
-    task_ids+=( "${BASH_REMATCH[1]}" )
+    if ! utils::in_array "${BASH_REMATCH[3]}" "${task_ids[*]}"; then
+      task_ids+=( "${BASH_REMATCH[3]}" )
+    fi
     body=${body#*"${BASH_REMATCH[0]}"}
   done
 
@@ -16,25 +27,40 @@ teamwork::get_task_id_from_body() {
   echo "$task_ids_str"
 }
 
+# Calls the Teamwork API and prints the response body. Fails on network errors,
+# timeouts and HTTP error statuses, printing the error body in the latter case.
+teamwork::request() {
+  local -r method=$1
+  local -r path=$2
+  local -r payload=${3:-}
+
+  local args=(-sS --fail-with-body --max-time 30 -X "$method" -u "$TEAMWORK_API_TOKEN"':')
+  if [ -n "$payload" ]; then
+    args+=(-H 'Content-Type: application/json; charset=utf-8' -d "$payload")
+  fi
+
+  curl "${args[@]}" "$TEAMWORK_URI$path"
+}
+
+# Logs a failed request and records it, so the run fails once every task has
+# been processed.
+teamwork::request_failed() {
+  log::error "$1"
+  TEAMWORK_FAILED_REQUESTS=$((TEAMWORK_FAILED_REQUESTS + 1))
+}
+
 teamwork::get_project_id_from_task() {
   local -r task_id=$1
 
-  if [ "$ENV" == "test" ]; then
-    echo "$task_id"
-    return
-  fi
-
-  response=$(
-    curl "$TEAMWORK_URI/projects/api/v1/tasks/$task_id.json" -u "$TEAMWORK_API_TOKEN"':' |\
-      jq -r '.["todo-item"]["project-id"]'
-  )
-  echo "$response"
+  teamwork::request GET "/projects/api/v1/tasks/$task_id.json" |\
+    jq -r '.["todo-item"]["project-id"]'
 }
 
 # Resolves a workflow stage name to its "<workflowId> <stageId>" pair within the
 # task's project. Matching is a case-sensitive substring match against the stage
 # name (mirroring the legacy board-column behaviour), and the first match wins.
-# Echoes nothing when no stage name is provided or no stage matches.
+# Echoes nothing when no stage name is provided or no stage matches, and fails
+# when the stages can't be fetched.
 teamwork::get_workflow_stage() {
   local -r stage_name=$1
 
@@ -42,16 +68,10 @@ teamwork::get_workflow_stage() {
     return
   fi
 
-  if [ "$ENV" == "test" ]; then
-    echo "$TEAMWORK_PROJECT_ID $TEAMWORK_PROJECT_ID"
-    return
-  fi
-
   # A single call scoped to the project sideloads every stage across the
   # project's workflow(s); each stage carries its parent workflow id, which the
   # move endpoint also needs.
-  curl -s "$TEAMWORK_URI/projects/api/v3/workflows.json?projectIds=$TEAMWORK_PROJECT_ID&include=stages" \
-    -u "$TEAMWORK_API_TOKEN"':' |\
+  teamwork::request GET "/projects/api/v3/workflows.json?projectIds=$TEAMWORK_PROJECT_ID&include=stages" |\
     jq -r --arg stage_name "$stage_name" \
       '[.included.stages[]? | select(.name | contains($stage_name)) | "\(.workflow.id) \(.id)"][0] // empty'
 }
@@ -64,7 +84,11 @@ teamwork::move_task_to_stage() {
     return
   fi
 
-  local -r stage=$(teamwork::get_workflow_stage "$stage_name")
+  local stage
+  if ! stage=$(teamwork::get_workflow_stage "$stage_name"); then
+    teamwork::request_failed "Failed to fetch the workflow stages of project $TEAMWORK_PROJECT_ID"
+    return
+  fi
   if [ -z "$stage" ]; then
     log::message "Failed to find a matching workflow stage for '$stage_name'"
     return
@@ -73,15 +97,11 @@ teamwork::move_task_to_stage() {
   local workflow_id stage_id
   read -r workflow_id stage_id <<< "$stage"
 
-  if [ "$ENV" == "test" ]; then
-    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Project ID: $TEAMWORK_PROJECT_ID - Workflow ID: $workflow_id - Stage ID: $stage_id"
+  if ! response=$(teamwork::request PATCH "/projects/api/v3/tasks/$TEAMWORK_TASK_ID/workflows/$workflow_id.json" \
+      "{ \"stageId\": $stage_id, \"positionAfterTask\": -1 }"); then
+    teamwork::request_failed "Failed to move task $TEAMWORK_TASK_ID to the '$stage_name' workflow stage: $response"
     return
   fi
-
-  response=$(curl -X "PATCH" "$TEAMWORK_URI/projects/api/v3/tasks/$TEAMWORK_TASK_ID/workflows/$workflow_id.json" \
-      -u "$TEAMWORK_API_TOKEN"':' \
-      -H 'Content-Type: application/json; charset=utf-8' \
-      -d "{ \"stageId\": $stage_id, \"positionAfterTask\": -1 }" )
 
   log::message "$response"
 }
@@ -89,15 +109,14 @@ teamwork::move_task_to_stage() {
 teamwork::add_comment() {
   local -r body=$1
 
-  if [ "$ENV" == "test" ]; then
-    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Comment: ${body//\"/}"
+  # jq escapes the body (quotes, backslashes, newlines...) into valid JSON
+  local -r payload=$(jq -n --arg body "$body" \
+    '{ comment: { body: $body, notify: true, "content-type": "text", isprivate: false } }')
+
+  if ! response=$(teamwork::request POST "/tasks/$TEAMWORK_TASK_ID/comments.json" "$payload"); then
+    teamwork::request_failed "Failed to add a comment to task $TEAMWORK_TASK_ID: $response"
     return
   fi
-
-  response=$(curl -X "POST" "$TEAMWORK_URI/tasks/$TEAMWORK_TASK_ID/comments.json" \
-       -u "$TEAMWORK_API_TOKEN"':' \
-       -H 'Content-Type: application/json; charset=utf-8' \
-       -d "{ \"comment\": { \"body\": \"${body//\"/}\", \"notify\": true, \"content-type\": \"text\", \"isprivate\": false } }" )
 
   log::message "$response"
 }
@@ -105,16 +124,12 @@ teamwork::add_comment() {
 teamwork::add_tag() {
   local -r tag_name=$1
 
-  if [ "$ENV" == "test" ]; then
-    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Tag Added: ${tag_name//\"/}"
-    return
-  fi
-
   if [ "$AUTOMATIC_TAGGING" == true ]; then
-    response=$(curl -X "PUT" "$TEAMWORK_URI/tasks/$TEAMWORK_TASK_ID/tags.json" \
-       -u "$TEAMWORK_API_TOKEN"':' \
-       -H 'Content-Type: application/json; charset=utf-8' \
-       -d "{ \"tags\": { \"content\": \"${tag_name//\"/}\" } }" )
+    if ! response=$(teamwork::request PUT "/tasks/$TEAMWORK_TASK_ID/tags.json" \
+        "{ \"tags\": { \"content\": \"${tag_name//\"/}\" } }"); then
+      teamwork::request_failed "Failed to add the '$tag_name' tag to task $TEAMWORK_TASK_ID: $response"
+      return
+    fi
 
     log::message "$response"
   fi
@@ -123,16 +138,12 @@ teamwork::add_tag() {
 teamwork::remove_tag() {
   local -r tag_name=$1
 
-  if [ "$ENV" == "test" ]; then
-    log::message "Test - Simulate request. Task ID: $TEAMWORK_TASK_ID - Tag Removed: ${tag_name//\"/}"
-    return
-  fi
-
   if [ "$AUTOMATIC_TAGGING" == true ]; then
-    response=$(curl -X "PUT" "$TEAMWORK_URI/tasks/$TEAMWORK_TASK_ID/tags.json" \
-         -u "$TEAMWORK_API_TOKEN"':' \
-         -H 'Content-Type: application/json; charset=utf-8' \
-         -d "{ \"tags\": { \"content\": \"${tag_name//\"/}\" },\"removeProvidedTags\":\"true\" }" )
+    if ! response=$(teamwork::request PUT "/tasks/$TEAMWORK_TASK_ID/tags.json" \
+        "{ \"tags\": { \"content\": \"${tag_name//\"/}\" },\"removeProvidedTags\":\"true\" }"); then
+      teamwork::request_failed "Failed to remove the '$tag_name' tag from task $TEAMWORK_TASK_ID: $response"
+      return
+    fi
 
     log::message "$response"
   fi

@@ -1,0 +1,40 @@
+exit code: 0
+
+GET /projects/api/v1/tasks/1001.json -> 200
+
+POST /tasks/1001/comments.json -> 201
+  comment:
+    body:
+      |
+      | **octocat** opened a PR: **Add "OAuth" login**
+      | [https://github.com/acme/webapp/pull/42](https://github.com/acme/webapp/pull/42)
+      | `main` ⬅️ `feature/oauth`
+      |
+      | ---
+      |
+      | #### Summary␍
+      | Adds OAuth login for http://teamwork:8080/app/tasks/1001␍
+      | ␍
+      | ```sh␍
+      | # configure the "client" secret␍
+      | export CONFIG_DIR=C:\Users\dev\config␍
+      | ```
+      |
+      | ---
+      |
+      | 🔢 3 commits / 📝 5 files updated / ➕ 120 additions / ➖ 8 deletions
+      |
+      |
+    content-type: "text"
+    isprivate: false
+    notify: true
+
+PUT /tasks/1001/tags.json -> 200
+  tags:
+    content: "PR Open"
+
+GET /projects/api/v3/workflows.json?projectIds=100&include=stages -> 200
+
+PATCH /projects/api/v3/tasks/1001/workflows/7.json -> 204
+  positionAfterTask: -1
+  stageId: 72
