@@ -12,7 +12,7 @@ inputs:
     description: 'Teamwork URI'
     required: true
   TEAMWORK_API_TOKEN:
-    description: 'Teamwork API token'
+    description: 'Teamwork API key, or a bearer token (starts with "tkn.")'
     required: true
   AUTOMATIC_TAGGING:
     description: 'Do you want to enable automatic tagging: true/false'
