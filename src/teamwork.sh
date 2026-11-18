@@ -34,12 +34,18 @@ teamwork::request() {
   local -r path=$2
   local -r payload=${3:-}
 
-  local args=(-sS --fail-with-body --max-time 30 -X "$method" -u "$TEAMWORK_API_TOKEN"':')
+  local args=(-sS --fail-with-body --max-time 30 -X "$method")
   if [ -n "$payload" ]; then
     args+=(-H 'Content-Type: application/json; charset=utf-8' -d "$payload")
   fi
 
-  curl "${args[@]}" "$TEAMWORK_URI$path"
+  # A "tkn." token is a bearer token, anything else is an API key. The bearer
+  # header goes in on stdin to keep the token out of the process list.
+  if [[ $TEAMWORK_API_TOKEN == tkn.* ]]; then
+    curl "${args[@]}" -H @- "$TEAMWORK_URI$path" <<< "Authorization: Bearer $TEAMWORK_API_TOKEN"
+  else
+    curl "${args[@]}" -u "$TEAMWORK_API_TOKEN"':' "$TEAMWORK_URI$path"
+  fi
 }
 
 # Logs a failed request and records it, so the run fails once every task has

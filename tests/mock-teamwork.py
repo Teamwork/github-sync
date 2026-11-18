@@ -10,7 +10,7 @@ import sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 LOG_PATH = sys.argv[1]
-AUTHORIZATION = "Basic " + base64.b64encode(b"test-token:").decode()
+AUTHORIZATIONS = {"Basic " + base64.b64encode(b"test-token:").decode(), "Bearer tkn.test-token"}
 
 # Task id -> project id. Requests about any other task fail with a 404.
 TASKS = {"1001": 100, "1002": 200, "1003": 300}
@@ -77,7 +77,7 @@ class Handler(BaseHTTPRequestHandler):
             except ValueError as error:
                 return 400, {"MESSAGE": "Invalid JSON"}, [f"  invalid JSON: {error}", "  " + json.dumps(raw)]
 
-        if self.headers.get("Authorization") != AUTHORIZATION:
+        if self.headers.get("Authorization") not in AUTHORIZATIONS:
             return 401, {"MESSAGE": "Unauthorized"}, details
 
         task = re.search(r"/tasks/(\d+)", self.path)
